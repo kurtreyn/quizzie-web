@@ -1,0 +1,37 @@
+.menu-container {
+  display: flex;
+  width: 100%;
+  background: #7f7fd5;
+  background: -webkit-linear-gradient(to right, #91eae4, #86a8e7, #7f7fd5);
+  background: linear-gradient(to right, #91eae4, #86a8e7, #7f7fd5);
+}
+
+.left-menu {
+  display: flex;
+  width: 50%;
+}
+
+.menu-icon {
+  width: 5rem;
+  height: 5rem;
+  margin-left: 2rem;
+}
+
+.right-menu {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 50%;
+}
+
+.menu-options-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 5rem;
+}
+
+.menu-text {
+  color: #fff;
+  font-size: large;
+}

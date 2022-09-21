@@ -1,42 +1,78 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { url, protocol } from '../shared/sharedData';
-// import '../styles/loginStyle.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserAuth, setUserInfo } from '../redux/user';
+import Menu from '../components/Menu';
+import quizzieLogo from '../assets/icon.png';
+import '../styles/loginStyle.css';
 
 export default function Login() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isAuth, userInfo } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // dispatch(setUserAuth(true));
+    dispatch(
+      setUserInfo({
+        user_name: username,
+        password: password,
+      })
+    );
+    // navigate('/');
+  };
+
+  console.log(`username: ${username}, password: ${password}`);
+
+  console.log('userInfo', userInfo);
+  // console.log('isAuth', isAuth);
 
   return (
     <div className="login-container">
       <div className="login-header">
-        <h1 className="login-header-text">Login</h1>
+        <Menu />
       </div>
 
       <div className="login-body">
-        <form action="" className="login-form">
-          <input
-            type="text"
-            placeholder="user name"
-            className="login-input"
-            onChange={(e) => setUserName(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="password"
-            className="login-input login-input-password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </form>
-        <button
-          className="login-button"
-          disabled={loading}
-          //   onClick={handleLogin}
-        >
-          <span className="login-button-text">Login</span>
-        </button>
+        <div className="left-body">
+          <div className="welcome-section">
+            <img src={quizzieLogo} alt="logo" className="login-logo" />
+          </div>
+        </div>
+        <div className="right-body">
+          <form action="" className="login-form">
+            <input
+              type="text"
+              placeholder="user name"
+              className="login-input"
+              onChange={(e) => setUserName(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="password"
+              className="login-input login-input-password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              className="login-button"
+              disabled={loading}
+              onClick={handleLogin}
+            >
+              <span className="login-button-text">Login</span>
+            </button>
+
+            <div className="form-footer">
+              <span className="form-footer-text">Don't have an account?</span>
+              <a href="/signup" className="form-footer-text link-text">
+                Signup
+              </a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
