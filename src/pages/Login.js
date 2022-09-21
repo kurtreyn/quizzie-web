@@ -9,27 +9,21 @@ import '../styles/loginStyle.css';
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isAuth, userInfo } = useSelector((state) => state.user);
+  // const { isAuth, userInfo } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [username, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = (e) => {
-    e.preventDefault();
-    // dispatch(setUserAuth(true));
+    // e.preventDefault();
+    dispatch(setUserAuth(true));
     dispatch(
       setUserInfo({
         user_name: username,
         password: password,
       })
     );
-    // navigate('/');
   };
-
-  console.log(`username: ${username}, password: ${password}`);
-
-  console.log('userInfo', userInfo);
-  // console.log('isAuth', isAuth);
 
   return (
     <div className="login-container">

@@ -1,4 +1,27 @@
 .home-container {
   display: flex;
+  flex-direction: column;
   width: 100%;
+}
+
+.main-section {
+  display: flex;
+}
+
+.controls-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  min-height: 300px;
+  outline: solid 1px green;
+}
+
+.quiz-and-list-section {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  min-height: 300px;
+  outline: solid 1px blue;
 }
