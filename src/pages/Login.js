@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserAuth, setUserInfo } from '../redux/user';
+import { auth } from '../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import Menu from '../components/Menu';
 import quizzieLogo from '../assets/icon.png';
 import '../styles/loginStyle.css';
@@ -11,19 +13,24 @@ export default function Login() {
   const dispatch = useDispatch();
   // const { isAuth, userInfo } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
-  const [username, setUserName] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = (e) => {
-    // e.preventDefault();
-    dispatch(setUserAuth(true));
-    dispatch(
-      setUserInfo({
-        user_name: username,
-        password: password,
-      })
-    );
-  };
+  function signIn(email, password) {
+    return signInWithEmailAndPassword(auth, email, password);
+  }
+
+  async function handleLogin() {
+    setLoading(true);
+    try {
+      await signIn(email, password);
+    } catch (error) {
+      console.log(error.message);
+      alert('Error');
+    }
+    setLoading(false);
+    navigate('/');
+  }
 
   return (
     <div className="login-container">
@@ -43,7 +50,7 @@ export default function Login() {
               type="text"
               placeholder="user name"
               className="login-input"
-              onChange={(e) => setUserName(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { firebase, db } from '../firebase';
+import { auth } from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import Menu from '../components/Menu';
 import quizzieLogo from '../assets/icon.png';
 import profileAvatar from '../assets/profile-avatar.png';
@@ -11,28 +12,24 @@ export default function Signup() {
   const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const navigate = useNavigate();
 
-  const handleSignup = async (email, username, password) => {
+  function signupUser(email, password) {
+    return createUserWithEmailAndPassword(auth, email, password);
+  }
+
+  async function handleSignup() {
+    setLoading(true);
     try {
-      const authUser = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-      console.log('Firebas user created successfully');
-      db.collection('users')
-        .doc(authUser.user.email)
-        .set({
-          owner_uid: authUser.user.uid,
-          username: username,
-          email: authUser.user.email,
-          profile_picture: profileAvatar,
-          photoURL: profileAvatar,
-        })
-        .then(() => navigate('/login'));
+      await signupUser(email, password);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
+      alert('Error');
     }
-  };
+    setLoading(false);
+    navigate('/login');
+  }
 
   return (
     <div className="signup-container">
@@ -54,12 +51,12 @@ export default function Signup() {
               className="signup-input"
               onChange={(e) => setEmail(e.target.value)}
             />
-            <input
+            {/* <input
               type="text"
               placeholder="user name"
               className="signup-input"
               onChange={(e) => setUserName(e.target.value)}
-            />
+            /> */}
             <input
               type="password"
               placeholder="password"

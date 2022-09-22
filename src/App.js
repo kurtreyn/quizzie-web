@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { auth } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { setCurrentUser } from './redux/user';
 import { firebase } from './firebase';
@@ -8,23 +10,22 @@ import './styles/appStyle.css';
 
 function App() {
   const dispatch = useDispatch();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const userHandler = (user) => {
-    if (user) {
-      dispatch(setCurrentUser(user));
-      setIsLoggedIn(true);
-    } else {
-      setCurrentUser(null);
-    }
-  };
+  const currentUser = useAuth();
 
-  useEffect(() => {
-    return firebase.auth().onAuthStateChanged((user) => userHandler(user));
-  }, []);
+  function useAuth() {
+    const [currentUser, setCurrentUser] = useState();
+
+    useEffect(() => {
+      const unsub = onAuthStateChanged(auth, (user) => setCurrentUser(user));
+      return unsub;
+    }, []);
+
+    return currentUser;
+  }
 
   return (
     <BrowserRouter>
-      <Nav isLoggedIn={isLoggedIn} />
+      <Nav currentUser={currentUser} />
     </BrowserRouter>
   );
 }
