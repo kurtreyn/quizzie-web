@@ -14,14 +14,8 @@ import {
   thirdSetOfInstructions,
   groupsPresent,
 } from '../shared/quizInstructions';
-import { db, auth } from '../firebase';
-import {
-  collection,
-  deleteDoc,
-  onSnapshot,
-  doc,
-  query,
-} from 'firebase/firestore';
+import { colRef, db } from '../firebase';
+import { getDocs, doc, deleteDoc, collectionGroup } from 'firebase/firestore';
 import Menu from '../components/Menu';
 import AddQuizForm from '../components/AddQuizForm';
 import Quiz from '../components/Quiz';
@@ -46,7 +40,7 @@ export default function Home() {
   } = useSelector((state) => state.controls);
   const [quizActive, setQuizActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [localGroup, setLocalGroup] = useState(null);
+
   let groupLength;
 
   if (groups) {
@@ -54,42 +48,42 @@ export default function Home() {
   }
 
   const handleCreqteQuiz = () => {
+    console.log('creating quiz');
     dispatch(setButtonDisabled(true));
     dispatch(setCreatingQuiz(true));
   };
 
   const handleQuizStatus = (theId) => {
-    let chosenGroup = groups.filter((group) => {
+    console.log('handleQuizStatus theId:', theId);
+    let chosenGroup = groups.map((group) => {
       if (group.id === theId) {
         return group;
       }
     });
-    setQuizActive(!quizActive);
+    setQuizActive(true);
     dispatch(setActiveGroup(chosenGroup));
   };
 
-  const runUnsubscribe = async () => {
-    const q = query(collection(db, 'posts'));
-    onSnapshot(q, (snapshot) => {
-      console.log(snapshot.docs);
-      setLocalGroup(snapshot.docs.map((doc) => doc.data()));
-    });
+  const runUnsubscribe = () => {
+    getDocs(colRef)
+      .then((snapshot) => {
+        let posts = [];
+        snapshot.docs.forEach((doc) => {
+          posts.push({ ...doc.data(), id: doc.id });
+        });
+        dispatch(setGroups(posts));
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   const deleteGroup = (postId) => {
-    // console.log('deleting id:', postId);
-    // const unsubscribe = db
-    //   .collection('posts')
-    //   .doc(postId)
-    //   .delete()
-    //   .then(() => {
-    //     console.log('Document successfully deleted!');
-    //     runUnsubscribe();
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error removing document: ', error);
-    //   });
-    // return unsubscribe;
+    const docRef = doc(db, 'posts', postId);
+
+    deleteDoc(docRef).then(() => {
+      console.log('deleted post:', postId);
+    });
   };
 
   const handleDeleteQuiz = (postId) => {
@@ -97,21 +91,20 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // setQuizActive(false);
-    // dispatch(setQuizReset(false));
+    setQuizActive(false);
+    dispatch(setQuizReset(false));
     runUnsubscribe();
   }, [groupLength, quiz_reset]);
 
   console.log(`button_disabled`, button_disabled);
   console.log(`creating_quiz`, creating_quiz);
   console.log('groups', groups);
-  console.log('localGroup', localGroup);
 
   return (
     <div className="home-container">
       <Menu />
 
-      {groups && (
+      {groups && !quizActive && !creating_quiz && (
         <div className="main-section">
           <div className="controls-section">
             <>
@@ -119,36 +112,38 @@ export default function Home() {
               <Button
                 label="Create Quiz"
                 disabled={button_disabled}
-                // onClick={handleCreqteQuiz}
+                onClick={handleCreqteQuiz}
               />
             </>
           </div>
           <div className="quiz-and-list-section">
-            {groups.map((group, index) => {
-              return (
-                <GroupContainer
-                  id={group.id}
-                  key={index}
-                  label={group.subject_name}
-                  group={group}
-                  // onClick={() => handleQuizStatus(group.id)}
-                />
-              );
-            })}
+            <div className="group-wrapper">
+              {groups.map((group, index) => {
+                return (
+                  <GroupContainer
+                    id={group.id}
+                    key={index}
+                    label={group.subject_name}
+                    group={group}
+                    onClick={() => handleQuizStatus(group.id)}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
 
-      {!quizActive && (
+      {quizActive && (
         <div className="main-section">
           <div className="controls-section">
-            {creating_quiz ? null : (
+            {creating_quiz && (
               <>
                 <Instructions insturctions={firstSetOfInstructions} />
                 <Button
                   label="Create Quiz"
                   disabled={button_disabled}
-                  // onClick={handleCreqteQuiz}
+                  onClick={handleCreqteQuiz}
                 />
               </>
             )}

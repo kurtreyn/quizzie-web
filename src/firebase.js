@@ -1,7 +1,15 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
-import { getDatabase, ref, onValue } from 'firebase/database';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  collectionGroup,
+  addDoc,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
 
 const firebaseConfig = {
   // apiKey: process.env.REACT_APP_API_KEY,
@@ -20,7 +28,26 @@ const firebaseConfig = {
   measurementId: 'G-HJTG874DF0',
 };
 
+// init firebase
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const storage = getStorage();
-export const db = getDatabase();
+// init services
+export const db = getFirestore();
+
+// collection ref
+export const colRef = collectionGroup(db, 'posts');
+
+// get collection data
+getDocs(colRef)
+  .then((snapshot) => {
+    // console.log(snapshot.docs)
+    let posts = [];
+    snapshot.docs.forEach((doc) => {
+      posts.push({ ...doc.data(), id: doc.id });
+    });
+    console.log(posts);
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });

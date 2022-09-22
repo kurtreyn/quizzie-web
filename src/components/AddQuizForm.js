@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHasQuizName, setNameOfQuizDispatch } from '../redux/controls';
-// import { firebase, db } from '../firebase';
+import { colRef, db, auth } from '../firebase';
+import { getDocs, doc, deleteDoc, collectionGroup } from 'firebase/firestore';
 import Button from './Button';
 import '../styles/addQuizFormStyle.css';
 
@@ -17,91 +18,90 @@ export default function AddQuizForm() {
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
 
-  // const handleAddQuestion = (e) => {
-  //   setQuestion(e.target.value);
-  // };
+  const handleAddQuestion = (e) => {
+    setQuestion(e.target.value);
+  };
 
-  // const handleAddQAnswer = (e) => {
-  //   setAnswer(e.target.value);
-  // };
+  const handleAddQAnswer = (e) => {
+    setAnswer(e.target.value);
+  };
 
-  // const handleQuizNameStatus = () => {
-  //   dispatch(setHasQuizName(true));
-  //   dispatch(setNameOfQuizDispatch(quizName));
-  // };
+  const handleQuizNameStatus = () => {
+    dispatch(setHasQuizName(true));
+    dispatch(setNameOfQuizDispatch(quizName));
+  };
 
-  // const handleAddQandA = (e) => {
-  //   e.preventDefault();
-  //   if (quizSet === null) {
-  //     setQuizSet([
-  //       {
-  //         question: question,
-  //         correct_answer: answer,
-  //         incorrect_answers: [],
-  //       },
-  //     ]);
-  //   } else {
-  //     setQuizSet((prevState) => {
-  //       return [
-  //         ...prevState,
-  //         { question: question, correct_answer: answer, incorrect_answers: [] },
-  //       ];
-  //     });
-  //   }
-  //   setQuestion('');
-  //   setAnswer('');
-  //   setNumber(number + 1);
-  // };
+  const handleAddQandA = (e) => {
+    e.preventDefault();
+    if (quizSet === null) {
+      setQuizSet([
+        {
+          question: question,
+          correct_answer: answer,
+          incorrect_answers: [],
+        },
+      ]);
+    } else {
+      setQuizSet((prevState) => {
+        return [
+          ...prevState,
+          { question: question, correct_answer: answer, incorrect_answers: [] },
+        ];
+      });
+    }
+    setQuestion('');
+    setAnswer('');
+    setNumber(number + 1);
+  };
 
-  // const handleReset = () => {
-  //   dispatch(setHasQuizName(false));
-  //   dispatch(setNameOfQuizDispatch(''));
-  //   setQuizName('');
-  //   setNumber(0);
-  // };
+  const handleReset = () => {
+    dispatch(setHasQuizName(false));
+    dispatch(setNameOfQuizDispatch(''));
+    setQuizName('');
+    setNumber(0);
+  };
 
-  // const uploadPostToFirebase = (posts) => {
-  //   const unsubscribe = db
-  //     .collection('users')
-  //     .doc(firebase.auth().currentUser.email)
-  //     .collectionGroup('posts')
-  //     .add({
-  //       user: currentLoggedInUser.username,
-  //       profile_picture: currentLoggedInUser.profilePicture,
-  //       owner_uid: firebase.auth().currentUser.uid,
-  //       owner_email: firebase.auth().currentUser.email,
-  //       subject_name: name_of_quiz,
-  //       post_q_a: posts,
-  //       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //     });
+  const uploadPostToFirebase = (posts) => {
+    // const unsubscribe = db
+    //   .collection('users')
+    //   .doc(auth().currentUser.email)
+    //   .collectionGroup('posts')
+    //   .add({
+    //     user: currentLoggedInUser.username,
+    //     profile_picture: currentLoggedInUser.profilePicture,
+    //     owner_uid: auth().currentUser.uid,
+    //     owner_email: auth().currentUser.email,
+    //     subject_name: name_of_quiz,
+    //     post_q_a: posts,
+    //     createdAt: new Date(),
+    //   });
+    // return unsubscribe;
+  };
 
-  //   return unsubscribe;
-  // };
+  const handleSubmitQuiz = () => {
+    uploadPostToFirebase(quizSet);
+  };
 
-  // const handleSubmitQuiz = () => {
-  //   uploadPostToFirebase(quizSet);
-  // };
+  const getUserName = () => {
+    // const user = auth().currentUser;
+    // const unsubscribe = db
+    //   .collection('users')
+    //   .where('owner_uid', '==', user.uid)
+    //   .limit(1)
+    //   .onSnapshot((snapshot) =>
+    //     snapshot.docs.map((doc) => {
+    //       setCurrentLoggedInUser({
+    //         username: doc.data().username,
+    //         profilePicture: doc.data().profile_picture,
+    //       });
+    //     })
+    //   );
+    // return unsubscribe;
+  };
 
-  // const getUserName = () => {
-  //   const user = firebase.auth().currentUser;
-  //   const unsubscribe = db
-  //     .collection('users')
-  //     .where('owner_uid', '==', user.uid)
-  //     .limit(1)
-  //     .onSnapshot((snapshot) =>
-  //       snapshot.docs.map((doc) => {
-  //         setCurrentLoggedInUser({
-  //           username: doc.data().username,
-  //           profilePicture: doc.data().profile_picture,
-  //         });
-  //       })
-  //     );
-  //   return unsubscribe;
-  // };
-
-  //   useEffect(() => {
-  //     getUserName();
-  //   }, []);
+  useEffect(() => {
+    getUserName();
+  }, []);
 
   //   console.log('quizName', quizName);
   console.log('name_of_quiz', name_of_quiz);
@@ -127,7 +127,7 @@ export default function AddQuizForm() {
                 onChange={(e) => setQuizName(e.target.value)}
               />
             </form>
-            {/* <Button label="Add Quiz Name" onClick={handleQuizNameStatus} /> */}
+            <Button label="Add Quiz Name" onClick={handleQuizNameStatus} />
           </>
         )}
 
@@ -143,7 +143,7 @@ export default function AddQuizForm() {
                 value={question}
                 placeholder="enter the question here"
                 className="add-quiz-input"
-                // onChange={handleAddQuestion}
+                onChange={handleAddQuestion}
               />
               <label htmlFor="question" className="add-quiz-label">
                 Enter Answer
@@ -154,16 +154,16 @@ export default function AddQuizForm() {
                 value={answer}
                 placeholder="enter the answer here"
                 className="add-quiz-input"
-                // onChange={handleAddQAnswer}
+                onChange={handleAddQAnswer}
               />
             </form>
-            {/* <Button label="Add Question & Answer" onClick={handleAddQandA} /> */}
+            <Button label="Add Question & Answer" onClick={handleAddQandA} />
             <Button
               btnType="submit"
               label="Submit"
-              // onClick={handleSubmitQuiz}
+              onClick={handleSubmitQuiz}
             />
-            {/* <Button btnType="reset" label="Reset" onClick={handleReset} /> */}
+            <Button btnType="reset" label="Reset" onClick={handleReset} />
           </>
         )}
       </div>
