@@ -14,7 +14,14 @@ import {
   thirdSetOfInstructions,
   groupsPresent,
 } from '../shared/quizInstructions';
-// import { db } from '../firebase';
+import { db, auth } from '../firebase';
+import {
+  collection,
+  deleteDoc,
+  onSnapshot,
+  doc,
+  query,
+} from 'firebase/firestore';
 import Menu from '../components/Menu';
 import AddQuizForm from '../components/AddQuizForm';
 import Quiz from '../components/Quiz';
@@ -38,70 +45,67 @@ export default function Home() {
     view_results,
   } = useSelector((state) => state.controls);
   const [quizActive, setQuizActive] = useState(false);
-  // let groupLength;
+  const [loading, setLoading] = useState(false);
+  const [localGroup, setLocalGroup] = useState(null);
+  let groupLength;
 
-  // if (groups) {
-  //   groupLength = groups.length;
-  // }
+  if (groups) {
+    groupLength = groups.length;
+  }
 
-  // const handleCreqteQuiz = () => {
-  //   dispatch(setButtonDisabled(true));
-  //   dispatch(setCreatingQuiz(true));
-  // };
+  const handleCreqteQuiz = () => {
+    dispatch(setButtonDisabled(true));
+    dispatch(setCreatingQuiz(true));
+  };
 
-  // const handleQuizStatus = (theId) => {
-  //   let chosenGroup = groups.filter((group) => {
-  //     if (group.id === theId) {
-  //       return group;
-  //     }
-  //   });
-  //   setQuizActive(!quizActive);
-  //   dispatch(setActiveGroup(chosenGroup));
-  // };
+  const handleQuizStatus = (theId) => {
+    let chosenGroup = groups.filter((group) => {
+      if (group.id === theId) {
+        return group;
+      }
+    });
+    setQuizActive(!quizActive);
+    dispatch(setActiveGroup(chosenGroup));
+  };
 
-  // const runUnsubscribe = () => {
-  //   const unsubscribe = db
-  //     .collectionGroup('posts')
-  //     .orderBy('createdAt', 'desc')
-  //     .onSnapshot((snapshot) => {
-  //       dispatch(
-  //         setGroups(
-  //           snapshot.docs.map((post) => ({ id: post.id, ...post.data() }))
-  //         )
-  //       );
-  //     });
+  const runUnsubscribe = async () => {
+    const q = query(collection(db, 'posts'));
+    onSnapshot(q, (snapshot) => {
+      console.log(snapshot.docs);
+      setLocalGroup(snapshot.docs.map((doc) => doc.data()));
+    });
+  };
 
-  //   return unsubscribe;
-  // };
+  const deleteGroup = (postId) => {
+    // console.log('deleting id:', postId);
+    // const unsubscribe = db
+    //   .collection('posts')
+    //   .doc(postId)
+    //   .delete()
+    //   .then(() => {
+    //     console.log('Document successfully deleted!');
+    //     runUnsubscribe();
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error removing document: ', error);
+    //   });
+    // return unsubscribe;
+  };
 
-  // const deleteGroup = (postId) => {
-  //   console.log('deleting id:', postId);
-  //   const unsubscribe = db
-  //     .collection('posts')
-  //     .doc(postId)
-  //     .delete()
-  //     .then(() => {
-  //       console.log('Document successfully deleted!');
-  //       runUnsubscribe();
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error removing document: ', error);
-  //     });
-  //   return unsubscribe;
-  // };
+  const handleDeleteQuiz = (postId) => {
+    deleteGroup(postId);
+  };
 
-  // const handleDeleteQuiz = (postId) => {
-  //   deleteGroup(postId);
-  // };
+  useEffect(() => {
+    // setQuizActive(false);
+    // dispatch(setQuizReset(false));
+    runUnsubscribe();
+  }, [groupLength, quiz_reset]);
 
-  // useEffect(() => {
-  //   setQuizActive(false);
-  //   dispatch(setQuizReset(false));
-  //   runUnsubscribe();
-  // }, [groupLength, quiz_reset]);
-
-  // console.log(`button_disabled`, button_disabled);
-  // console.log(`creating_quiz`, creating_quiz);
+  console.log(`button_disabled`, button_disabled);
+  console.log(`creating_quiz`, creating_quiz);
+  console.log('groups', groups);
+  console.log('localGroup', localGroup);
 
   return (
     <div className="home-container">
