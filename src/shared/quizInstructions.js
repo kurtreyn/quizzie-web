@@ -32,3 +32,17 @@ export const thirdSetOfInstructions = () => {
     </div>
   );
 };
+
+export const groupsPresent = () => {
+  return (
+    <div className="instructions-wrapper">
+      <p className="instructions-text">
+        Looks like you have some quizes already. If you want to review one of
+        your existing quizes, just click on the Quiz you would like to take.
+        <br />
+        Or, if you want to add another Quiz, click the{' '}
+        <strong>Create Quiz</strong> button.
+      </p>
+    </div>
+  );
+};

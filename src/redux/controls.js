@@ -7,10 +7,13 @@ export const controlsSlice = createSlice({
     creating_quiz: false,
     has_quiz_name: false,
     name_of_quiz: null,
-    active_quiz: null,
+    active_group: null,
     points_possible: null,
     final_score: null,
     final_results: null,
+    groups: null,
+    quiz_reset: false,
+    view_results: false,
   },
   reducers: {
     setButtonDisabled: (state, action) => {
@@ -25,8 +28,8 @@ export const controlsSlice = createSlice({
     setNameOfQuizDispatch: (state, action) => {
       state.name_of_quiz = action.payload;
     },
-    setActiveQuiz: (state, action) => {
-      state.active_quiz = action.payload;
+    setActiveGroup: (state, action) => {
+      state.active_group = action.payload;
     },
     setPointsPossible: (state, action) => {
       state.points_possible = action.payload;
@@ -37,6 +40,15 @@ export const controlsSlice = createSlice({
     setFinalResults: (state, action) => {
       state.final_results = action.payload;
     },
+    setGroups: (state, action) => {
+      state.groups = action.payload;
+    },
+    setQuizReset: (state, action) => {
+      state.quiz_reset = action.payload;
+    },
+    setViewResults: (state, action) => {
+      state.view_results = action.payload;
+    },
   },
 });
 
@@ -46,10 +58,13 @@ export const {
   setCreatingQuiz,
   setHasQuizName,
   setNameOfQuizDispatch,
-  setActiveQuiz,
+  setActiveGroup,
   setPointsPossible,
   setFinalResults,
   setFinalScore,
+  setGroups,
+  setQuizReset,
+  setViewResults,
 } = controlsSlice.actions;
 
 export default controlsSlice.reducer;

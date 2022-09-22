@@ -1,0 +1,26 @@
+.group-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10;
+  margin-left: 10;
+  background-color: #f7797d;
+  border-radius: 10;
+  border: solid 2px #dd3e54;
+  width: 145px;
+  height: 110px;
+  margin-top: 100;
+}
+
+.group-inner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 108px;
+}
+
+.group-text {
+  color: #fff;
+  font-size: 2rem;
+}
