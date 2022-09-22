@@ -14,13 +14,14 @@ export const userSlice = createSlice({
     setUserInfo: (state, action) => {
       state.userInfo = action.payload;
     },
-    setCurrentUser: (state, action) => {
+    setCurrentUserDispatch: (state, action) => {
       state.current_user = action.payload;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserAuth, setUserInfo, setCurrentUser } = userSlice.actions;
+export const { setUserAuth, setUserInfo, setCurrentUserDispatch } =
+  userSlice.actions;
 
 export default userSlice.reducer;

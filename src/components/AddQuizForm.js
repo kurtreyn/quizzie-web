@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHasQuizName, setNameOfQuizDispatch } from '../redux/controls';
-import { colRef, db, auth } from '../firebase';
-import { getDocs, doc, deleteDoc, collectionGroup } from 'firebase/firestore';
+import { colGroupRef, db, auth, colRef } from '../firebase';
+import {
+  getDocs,
+  doc,
+  deleteDoc,
+  collectionGroup,
+  addDoc,
+} from 'firebase/firestore';
 import Button from './Button';
 import '../styles/addQuizFormStyle.css';
 
@@ -11,12 +17,14 @@ export default function AddQuizForm() {
   const { has_quiz_name, name_of_quiz } = useSelector(
     (state) => state.controls
   );
+  const { current_user } = useSelector((state) => state.user);
   const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
   const [quizName, setQuizName] = useState(null);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
+  const postCollectionRef = collectionGroup(db, 'posts');
 
   const handleAddQuestion = (e) => {
     setQuestion(e.target.value);
@@ -61,10 +69,16 @@ export default function AddQuizForm() {
     setNumber(0);
   };
 
-  const uploadPostToFirebase = (posts) => {
+  const uploadPostToFirebase = async (posts) => {
+    await addDoc(colRef, doc(current_user.email), colGroupRef, {
+      subject_name: name_of_quiz,
+      post_q_a: posts,
+      createdAt: new Date(),
+    });
+
     // const unsubscribe = db
     //   .collection('users')
-    //   .doc(auth().currentUser.email)
+    //   .doc(auth.currentUser.email)
     //   .collectionGroup('posts')
     //   .add({
     //     user: currentLoggedInUser.username,
@@ -82,25 +96,25 @@ export default function AddQuizForm() {
     uploadPostToFirebase(quizSet);
   };
 
-  const getUserName = () => {
-    // const user = auth().currentUser;
-    // const unsubscribe = db
-    //   .collection('users')
-    //   .where('owner_uid', '==', user.uid)
-    //   .limit(1)
-    //   .onSnapshot((snapshot) =>
-    //     snapshot.docs.map((doc) => {
-    //       setCurrentLoggedInUser({
-    //         username: doc.data().username,
-    //         profilePicture: doc.data().profile_picture,
-    //       });
-    //     })
-    //   );
-    // return unsubscribe;
-  };
+  // const getUserName = () => {
+  //   const user = auth.currentUser;
+  //   const unsubscribe = db
+  //     .collection('users')
+  //     .where('owner_uid', '==', user.uid)
+  //     .limit(1)
+  //     .onSnapshot((snapshot) =>
+  //       snapshot.docs.map((doc) => {
+  //         setCurrentLoggedInUser({
+  //           username: doc.data().username,
+  //           profilePicture: doc.data().profile_picture,
+  //         });
+  //       })
+  //     );
+  //   return unsubscribe;
+  // };
 
   useEffect(() => {
-    getUserName();
+    // getUserName();
   }, []);
 
   //   console.log('quizName', quizName);

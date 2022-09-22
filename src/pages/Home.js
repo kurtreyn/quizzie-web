@@ -14,7 +14,7 @@ import {
   thirdSetOfInstructions,
   groupsPresent,
 } from '../shared/quizInstructions';
-import { colRef, db } from '../firebase';
+import { colGroupRef, db } from '../firebase';
 import { getDocs, doc, deleteDoc, collectionGroup } from 'firebase/firestore';
 import Menu from '../components/Menu';
 import AddQuizForm from '../components/AddQuizForm';
@@ -23,6 +23,9 @@ import Instructions from '../components/Instructions';
 import Button from '../components/Button';
 import Results from '../components/Results';
 import GroupContainer from '../components/GroupContainer';
+
+import ControlsSection from '../components/ControlsSection';
+import QuizListandFormSection from '../components/QuizListandFormSection';
 import qzzIcon from '../assets/icon.png';
 
 import '../styles/homeStyle.css';
@@ -38,6 +41,8 @@ export default function Home() {
     quiz_reset,
     view_results,
   } = useSelector((state) => state.controls);
+  const { current_user } = useSelector((state) => state.user);
+  const [mode, setMode] = useState('new_user');
   const [quizActive, setQuizActive] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +52,7 @@ export default function Home() {
     groupLength = groups.length;
   }
 
-  const handleCreqteQuiz = () => {
+  const handleCreateQuiz = () => {
     console.log('creating quiz');
     dispatch(setButtonDisabled(true));
     dispatch(setCreatingQuiz(true));
@@ -65,7 +70,7 @@ export default function Home() {
   };
 
   const runUnsubscribe = () => {
-    getDocs(colRef)
+    getDocs(colGroupRef)
       .then((snapshot) => {
         let posts = [];
         snapshot.docs.forEach((doc) => {
@@ -94,79 +99,48 @@ export default function Home() {
     setQuizActive(false);
     dispatch(setQuizReset(false));
     runUnsubscribe();
+    if (current_user) {
+      setMode('returning_user');
+    }
   }, [groupLength, quiz_reset]);
 
-  console.log(`button_disabled`, button_disabled);
+  // console.log(`button_disabled`, button_disabled);
+  console.log('current_user', current_user);
   console.log(`creating_quiz`, creating_quiz);
   console.log('groups', groups);
+  console.log('mode', mode);
 
   return (
     <div className="home-container">
       <Menu />
-
-      {groups && !quizActive && !creating_quiz && (
-        <div className="main-section">
-          <div className="controls-section">
-            <>
-              <Instructions insturctions={groupsPresent} />
-              <Button
-                label="Create Quiz"
-                disabled={button_disabled}
-                onClick={handleCreqteQuiz}
-              />
-            </>
-          </div>
-          <div className="quiz-and-list-section">
-            <div className="group-wrapper">
-              {groups.map((group, index) => {
-                return (
-                  <GroupContainer
-                    id={group.id}
-                    key={index}
-                    label={group.subject_name}
-                    group={group}
-                    onClick={() => handleQuizStatus(group.id)}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {quizActive && (
-        <div className="main-section">
-          <div className="controls-section">
-            {creating_quiz && (
-              <>
-                <Instructions insturctions={firstSetOfInstructions} />
-                <Button
-                  label="Create Quiz"
-                  disabled={button_disabled}
-                  onClick={handleCreqteQuiz}
-                />
-              </>
-            )}
-
-            {creating_quiz && !has_quiz_name && (
-              <Instructions insturctions={secondSetOfInstructions} />
-            )}
-
-            {creating_quiz && has_quiz_name && (
-              <Instructions insturctions={thirdSetOfInstructions} />
-            )}
-          </div>
-          <div className="quiz-and-list-section">
-            {creating_quiz && <AddQuizForm />}
-          </div>
-        </div>
-      )}
-
-      {view_results && quizActive && <Results />}
-
-      <div className="quiz-section">
-        {quizActive && !view_results && <Quiz />}
+      <div className="main-section">
+        <ControlsSection
+          mode={mode}
+          groupsPresent={groupsPresent}
+          button_disabled={button_disabled}
+          handleCreateQuiz={handleCreateQuiz}
+          groups={groups}
+          creating_quiz={creating_quiz}
+          has_quiz_name={has_quiz_name}
+          firstSetOfInstructions={firstSetOfInstructions}
+          secondSetOfInstructions={secondSetOfInstructions}
+          thirdSetOfInstructions={thirdSetOfInstructions}
+        />
+        <QuizListandFormSection
+          mode={mode}
+          groups={groups}
+          handleQuizStatus={handleQuizStatus}
+          creating_quiz={creating_quiz}
+        />
       </div>
+
+      {quizActive && !view_results && (
+        <div className="quiz-section">
+          <Quiz />
+        </div>
+      )}
+
+      {quizActive && view_results && <Results />}
     </div>
   );
 }

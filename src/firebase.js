@@ -36,18 +36,5 @@ export const storage = getStorage();
 export const db = getFirestore();
 
 // collection ref
-export const colRef = collectionGroup(db, 'posts');
-
-// get collection data
-getDocs(colRef)
-  .then((snapshot) => {
-    // console.log(snapshot.docs)
-    let posts = [];
-    snapshot.docs.forEach((doc) => {
-      posts.push({ ...doc.data(), id: doc.id });
-    });
-    console.log(posts);
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
+export const colGroupRef = collectionGroup(db, 'posts');
+export const colRef = collection(db, 'users');

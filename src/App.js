@@ -3,8 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
-import { setCurrentUser } from './redux/user';
-import { firebase } from './firebase';
+import { setCurrentUserDispatch } from './redux/user';
+// import { firebase } from './firebase';
 import Nav from './components/Nav';
 import './styles/appStyle.css';
 
@@ -17,11 +17,20 @@ function App() {
 
     useEffect(() => {
       const unsub = onAuthStateChanged(auth, (user) => setCurrentUser(user));
+
       return unsub;
     }, []);
 
     return currentUser;
   }
+
+  useEffect(() => {
+    if (currentUser) {
+      dispatch(setCurrentUserDispatch(currentUser));
+    }
+  });
+
+  // console.log('currentUser', currentUser);
 
   return (
     <BrowserRouter>
