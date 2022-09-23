@@ -2,14 +2,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 10;
-  margin-left: 10;
-  background-color: #f7797d;
+  background: #b92b27;
+  background: -webkit-linear-gradient(to right, #1565c0, #b92b27);
+  background: linear-gradient(to right, #1565c0, #b92b27);
+
   border-radius: 10;
-  border: solid 2px #dd3e54;
+  border: solid 2px #1565c0;
   width: 145px;
-  height: 110px;
-  margin-top: 100;
+  height: 90px;
+  margin: 0.5rem;
+  cursor: pointer;
 }
 
 .group-inner-container {
@@ -17,10 +19,10 @@
   justify-content: center;
   align-items: center;
   width: 140px;
-  height: 108px;
+  height: 90px;
 }
 
 .group-text {
   color: #fff;
-  font-size: 2rem;
+  font-size: 1rem;
 }

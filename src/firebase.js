@@ -1,4 +1,15 @@
-import firebase from 'firebase';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  collectionGroup,
+  addDoc,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
 
 const firebaseConfig = {
   // apiKey: process.env.REACT_APP_API_KEY,
@@ -17,8 +28,9 @@ const firebaseConfig = {
   measurementId: 'G-HJTG874DF0',
 };
 
-!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
-const db = firebase.firestore();
-const storage = firebase.storage();
-
-export { firebase, db, storage };
+// init firebase
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth();
+export const storage = getStorage();
+// init services
+export const db = getFirestore();

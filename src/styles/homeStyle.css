@@ -25,3 +25,7 @@
   min-height: 300px;
   outline: solid 1px blue;
 }
+
+.group-wrapper {
+  display: flex;
+}
