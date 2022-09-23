@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
 import Menu from '../components/Menu';
 import quizzieLogo from '../assets/icon.png';
 import '../styles/loginStyle.css';
@@ -26,6 +29,24 @@ export default function Login() {
     }
     setLoading(false);
     navigate('/');
+  }
+
+  function signupUser(email, password) {
+    return createUserWithEmailAndPassword(auth, email, password);
+  }
+
+  async function handleSignup() {
+    setLoading(true);
+    try {
+      await signupUser(email, password);
+      alert(
+        'Signup Successful. Now just enter your username & password and click the Login button'
+      );
+    } catch (error) {
+      console.log(error);
+      alert('Error');
+    }
+    setLoading(false);
   }
 
   return (
@@ -64,9 +85,15 @@ export default function Login() {
 
             <div className="form-footer">
               <span className="form-footer-text">Don't have an account?</span>
-              <a href="/signup" className="form-footer-text link-text">
+              <span
+                className="form-footer-text link-text"
+                onClick={handleSignup}
+              >
                 Signup
-              </a>
+              </span>
+              {/* <a href="/signup" className="form-footer-text link-text">
+                Signup
+              </a> */}
             </div>
           </form>
         </div>

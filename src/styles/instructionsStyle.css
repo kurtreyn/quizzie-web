@@ -22,3 +22,7 @@
   margin-left: 3rem;
   margin-right: 3rem;
 }
+
+/* ---------- MOBILE SECTION ----------- */
+@media only screen and (max-width: 600px) {
+}

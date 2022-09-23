@@ -34,3 +34,7 @@
   color: #c471ed;
   margin-top: 1rem;
 }
+
+/* ---------- MOBILE SECTION ----------- */
+@media only screen and (max-width: 600px) {
+}

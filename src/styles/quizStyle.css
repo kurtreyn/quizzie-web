@@ -48,3 +48,7 @@
   justify-content: center;
   align-items: center;
 }
+
+/* ---------- MOBILE SECTION ----------- */
+@media only screen and (max-width: 600px) {
+}
