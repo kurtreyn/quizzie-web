@@ -1,5 +1,4 @@
 import React from 'react';
-// import { firebase, db } from '../firebase';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setActiveGroup,
@@ -16,9 +15,7 @@ export default function Results() {
     (state) => state.controls
   );
   const dispatch = useDispatch();
-
   const finalPercent = (final_score / points_possible) * 100;
-  console.log(finalPercent);
 
   const resetQuiz = () => {
     dispatch(setActiveGroup(null));
@@ -27,8 +24,6 @@ export default function Results() {
     dispatch(setViewResults(false));
     dispatch(setQuizReset(true));
   };
-
-  console.log('final_score', final_score);
 
   return (
     <div className="results-container">

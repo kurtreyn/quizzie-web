@@ -1,11 +1,9 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserAuth } from '../redux/user';
+import { useSelector } from 'react-redux';
 import qzzIcon from '../assets/icon.png';
 import '../styles/menuStyle.css';
 
 export default function Menu() {
-  const dispatch = useDispatch();
   const { isAuth } = useSelector((state) => state.user);
 
   return (

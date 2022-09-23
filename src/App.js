@@ -29,8 +29,6 @@ function App() {
     }
   });
 
-  // console.log('currentUser', currentUser);
-
   return (
     <BrowserRouter>
       <Nav currentUser={currentUser} />

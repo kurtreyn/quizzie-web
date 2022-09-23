@@ -4,12 +4,10 @@ import { auth } from '../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import Menu from '../components/Menu';
 import quizzieLogo from '../assets/icon.png';
-import profileAvatar from '../assets/profile-avatar.png';
 import '../styles/signupStyle.css';
 
 export default function Signup() {
   const [loading, setLoading] = useState(false);
-  const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -51,12 +49,6 @@ export default function Signup() {
               className="signup-input"
               onChange={(e) => setEmail(e.target.value)}
             />
-            {/* <input
-              type="text"
-              placeholder="user name"
-              className="signup-input"
-              onChange={(e) => setUserName(e.target.value)}
-            /> */}
             <input
               type="password"
               placeholder="password"

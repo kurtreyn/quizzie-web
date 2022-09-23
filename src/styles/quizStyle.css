@@ -4,7 +4,6 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  outline: solid 1px green;
 }
 
 .quiz-inner-container {
@@ -13,7 +12,6 @@
   justify-content: center;
   align-items: center;
   width: 75%;
-  outline: solid 1px red;
 }
 
 .quiz-header {
@@ -21,7 +19,6 @@
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  outline: solid 1px blue;
 }
 
 .quiz-header-text {
@@ -38,7 +35,6 @@
   align-items: center;
   width: 50%;
   height: 8rem;
-  outline: solid 1px blue;
 }
 
 .question-text {
@@ -51,5 +47,4 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  outline: solid 1px blue;
 }

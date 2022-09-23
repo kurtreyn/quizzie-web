@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUserAuth, setUserInfo } from '../redux/user';
 import { auth } from '../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Menu from '../components/Menu';
@@ -10,8 +8,6 @@ import '../styles/loginStyle.css';
 
 export default function Login() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  // const { isAuth, userInfo } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

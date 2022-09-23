@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   setPointsPossible,
   setFinalResults,
@@ -111,10 +111,6 @@ export default function Quiz({ subjectName, group }) {
       dispatch(setPointsPossible(pointsPossible));
     }
   }, [disabled]);
-
-  // console.log('subjectName', subjectName);
-  // console.log('options', options);
-  // console.log('score', score);
 
   return (
     <div className="quiz-container">

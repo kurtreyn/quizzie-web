@@ -5,7 +5,6 @@
   align-items: center;
   width: 100%;
   min-height: 300px;
-  /* outline: solid 1px green; */
 }
 
 .results-header {
@@ -15,7 +14,6 @@
   align-items: center;
   width: 50%;
   margin-top: 2%;
-  /* outline: solid 1px orange; */
 }
 
 .score-text {
@@ -32,7 +30,6 @@
   align-items: flex-start;
   width: 50%;
   min-height: 100px;
-  /* outline: solid 1px blue; */
 }
 
 .results-question-text {
@@ -57,5 +54,4 @@
   align-items: center;
   width: 100%;
   margin-top: 2rem;
-  /* outline: solid 1px red; */
 }

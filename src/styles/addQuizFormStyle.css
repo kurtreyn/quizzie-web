@@ -9,16 +9,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* outline: solid 1px red; */
 }
 
 .add-quiz-form {
   display: flex;
   flex-direction: column;
-  /* justify-content: flex-start; */
   align-items: flex-start;
   margin-top: 2%;
-  /* outline: solid 1px green; */
 }
 
 .add-quiz-input {

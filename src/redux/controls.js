@@ -14,6 +14,7 @@ export const controlsSlice = createSlice({
     groups: null,
     quiz_reset: false,
     view_results: false,
+    new_quiz_added: false,
   },
   reducers: {
     setButtonDisabled: (state, action) => {
@@ -49,10 +50,12 @@ export const controlsSlice = createSlice({
     setViewResults: (state, action) => {
       state.view_results = action.payload;
     },
+    setNewQuizAdded: (state, action) => {
+      state.new_quiz_added = action.payload;
+    },
   },
 });
 
-// Action creators are generated for each case reducer function
 export const {
   setButtonDisabled,
   setCreatingQuiz,
@@ -65,6 +68,7 @@ export const {
   setGroups,
   setQuizReset,
   setViewResults,
+  setNewQuizAdded,
 } = controlsSlice.actions;
 
 export default controlsSlice.reducer;

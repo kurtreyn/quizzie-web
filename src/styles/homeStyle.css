@@ -15,7 +15,6 @@
   align-items: center;
   width: 50%;
   min-height: 300px;
-  outline: solid 1px green;
 }
 
 .quiz-and-list-section {
@@ -23,7 +22,6 @@
   flex-direction: column;
   width: 50%;
   min-height: 300px;
-  outline: solid 1px blue;
 }
 
 .group-wrapper {

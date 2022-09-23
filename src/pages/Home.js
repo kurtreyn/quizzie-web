@@ -20,8 +20,6 @@ import Quiz from '../components/Quiz';
 import Results from '../components/Results';
 import ControlsSection from '../components/ControlsSection';
 import QuizListandFormSection from '../components/QuizListandFormSection';
-// import qzzIcon from '../assets/icon.png';
-
 import '../styles/homeStyle.css';
 
 export default function Home() {
@@ -34,6 +32,7 @@ export default function Home() {
     has_quiz_name,
     quiz_reset,
     view_results,
+    new_quiz_added,
   } = useSelector((state) => state.controls);
   const { current_user } = useSelector((state) => state.user);
   const [mode, setMode] = useState('new_user');
@@ -93,14 +92,7 @@ export default function Home() {
     if (current_user && groups) {
       setMode('returning_user');
     }
-  }, [groupLength, quiz_reset]);
-
-  // console.log(`button_disabled`, button_disabled);
-  // console.log('current_user', current_user);
-  // console.log(`creating_quiz`, creating_quiz);
-  // console.log('groups', groups);
-  // console.log('mode', mode);
-  // console.log('active_group', active_group);
+  }, [groupLength, quiz_reset, new_quiz_added]);
 
   return (
     <div className="home-container">

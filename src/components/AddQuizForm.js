@@ -4,6 +4,7 @@ import {
   setHasQuizName,
   setNameOfQuizDispatch,
   setCreatingQuiz,
+  setNewQuizAdded,
 } from '../redux/controls';
 import { db } from '../firebase';
 import { collection, addDoc } from 'firebase/firestore';
@@ -74,19 +75,12 @@ export default function AddQuizForm({ runFetchQuizes }) {
       post_q_a: quizSet,
     })
       .then(dispatch(setCreatingQuiz(false)))
-      .then(runFetchQuizes());
+      .then(dispatch(setNewQuizAdded(true)));
   };
 
   const handleSubmitQuiz = () => {
     uploadPostToFirebase();
   };
-
-  //   console.log('quizName', quizName);
-  // console.log('name_of_quiz', name_of_quiz);
-  // console.log('question', question);
-  // console.log('answer', answer);
-  // console.log('number', number);
-  // console.log('quizSet', quizSet);
 
   return (
     <div className="add-quiz-container">
