@@ -10,7 +10,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import Button from './Button';
 import '../styles/addQuizFormStyle.css';
 
-export default function AddQuizForm() {
+export default function AddQuizForm({ runFetchQuizes }) {
   const dispatch = useDispatch();
   const { has_quiz_name, name_of_quiz } = useSelector(
     (state) => state.controls
@@ -74,7 +74,9 @@ export default function AddQuizForm() {
       owner_email: current_user.email,
       subject_name: name_of_quiz,
       post_q_a: quizSet,
-    }).then(dispatch(setCreatingQuiz(false)));
+    })
+      .then(dispatch(setCreatingQuiz(false)))
+      .then(runFetchQuizes());
   };
 
   const handleSubmitQuiz = () => {

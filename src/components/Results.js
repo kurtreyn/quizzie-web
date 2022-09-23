@@ -7,7 +7,6 @@ import {
   setFinalScore,
   setQuizReset,
   setViewResults,
-  setGroups,
 } from '../redux/controls';
 import Button from './Button';
 import '../styles/resultsStyle.css';
@@ -26,6 +25,8 @@ export default function Results() {
     dispatch(setQuizReset(true));
   };
 
+  console.log('final_score', final_score);
+
   return (
     <div className="results-container">
       <div className="results-header">
@@ -38,7 +39,7 @@ export default function Results() {
           return (
             <div className="results-inner-container" key={index}>
               <span className="results-question-text">
-                {result.askedQuestion}
+                Question: {result.askedQuestion}
               </span>
               <span
                 className={

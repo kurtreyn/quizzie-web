@@ -15,7 +15,7 @@ import {
   groupsPresent,
 } from '../shared/quizInstructions';
 import { colGroupRef, db } from '../firebase';
-import { getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { getDocs, doc, deleteDoc, collection } from 'firebase/firestore';
 import Menu from '../components/Menu';
 import Quiz from '../components/Quiz';
 import Results from '../components/Results';
@@ -40,10 +40,7 @@ export default function Home() {
   const { current_user } = useSelector((state) => state.user);
   const [mode, setMode] = useState('new_user');
   const [quizActive, setQuizActive] = useState(false);
-  // const [loading, setLoading] = useState(false);
-
   let groupLength;
-
   if (groups) {
     groupLength = groups.length;
   }
@@ -55,8 +52,6 @@ export default function Home() {
   };
 
   const handleQuizStatus = (theId) => {
-    // console.log('handleQuizStatus theId:', theId);
-    // groups.map((group) => console.log(group));
     let chosenGroup = groups.filter((group) => {
       if (group.id === theId) {
         return group;
@@ -68,7 +63,8 @@ export default function Home() {
   };
 
   const runFetchQuizzes = () => {
-    getDocs(colGroupRef)
+    const postRef = collection(db, 'users', `${current_user.email}`, `posts`);
+    getDocs(postRef)
       .then((snapshot) => {
         let posts = [];
         snapshot.docs.forEach((doc) => {
@@ -132,6 +128,7 @@ export default function Home() {
             groups={groups}
             handleQuizStatus={handleQuizStatus}
             creating_quiz={creating_quiz}
+            runFetchQuizzes={runFetchQuizzes}
           />
         )}
       </div>

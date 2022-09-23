@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
   setPointsPossible,
   setFinalResults,
@@ -10,8 +10,6 @@ import Button from './Button';
 import '../styles/quizStyle.css';
 
 export default function Quiz({ subjectName, group }) {
-  // console.log('GROUP ON QUIZ', group);
-
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [disabled, setDisabled] = useState(false);
@@ -107,14 +105,16 @@ export default function Quiz({ subjectName, group }) {
       runQuiz(post_q_a[index]);
     }
     if (disabled) {
+      console.log('FINAL SCORE IS:', score);
       dispatch(setFinalResults(results));
       dispatch(setFinalScore(score));
       dispatch(setPointsPossible(pointsPossible));
     }
   }, [disabled]);
 
-  console.log('subjectName', subjectName);
-  console.log('options', options);
+  // console.log('subjectName', subjectName);
+  // console.log('options', options);
+  // console.log('score', score);
 
   return (
     <div className="quiz-container">
@@ -124,7 +124,9 @@ export default function Quiz({ subjectName, group }) {
         </div>
 
         <div className="question-window">
-          <span className="question-text">{options.question}</span>
+          {options.map((option) => {
+            return <span className="question-text">{option.question}</span>;
+          })}
         </div>
 
         <div className="answer-section">
@@ -179,7 +181,11 @@ export default function Quiz({ subjectName, group }) {
             />
           )}
           {disabled && (
-            <Button btnType="viewResults" label="View Results" onClick={null} />
+            <Button
+              btnType="viewResults"
+              label="View Results"
+              onClick={handleViewResults}
+            />
           )}
         </div>
       </div>

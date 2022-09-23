@@ -19,7 +19,7 @@ export default function ControlsSection({
   return (
     <div className="controls-section">
       {mode === 'new_user' ||
-        (mode === 'returning_user' && !creating_quiz && !groups && (
+        (mode === 'returning_user' && !creating_quiz && groups.length === 0 && (
           <>
             <Instructions insturctions={firstSetOfInstructions} />
             <Button
@@ -46,7 +46,7 @@ export default function ControlsSection({
           </>
         ))}
 
-      {mode === 'returning_user' && groups && !creating_quiz && (
+      {mode === 'returning_user' && groups.length > 0 && !creating_quiz && (
         <>
           <Instructions insturctions={groupsPresent} />
           <Button
