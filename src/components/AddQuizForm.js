@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setHasQuizName, setNameOfQuizDispatch } from '../redux/controls';
-import { colGroupRef, db, auth, colRef } from '../firebase';
 import {
-  getDocs,
-  doc,
-  deleteDoc,
-  collectionGroup,
-  addDoc,
-} from 'firebase/firestore';
+  setHasQuizName,
+  setNameOfQuizDispatch,
+  setCreatingQuiz,
+} from '../redux/controls';
+import { db } from '../firebase';
+import { collection, addDoc } from 'firebase/firestore';
 import Button from './Button';
 import '../styles/addQuizFormStyle.css';
 
@@ -18,13 +16,11 @@ export default function AddQuizForm() {
     (state) => state.controls
   );
   const { current_user } = useSelector((state) => state.user);
-  const [currentLoggedInUser, setCurrentLoggedInUser] = useState(null);
   const [quizName, setQuizName] = useState(null);
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
-  const postCollectionRef = collectionGroup(db, 'posts');
 
   const handleAddQuestion = (e) => {
     setQuestion(e.target.value);
@@ -68,61 +64,29 @@ export default function AddQuizForm() {
     setQuizName('');
     setNumber(0);
   };
+  // console.log('posts OUTSIDE FUNCTION', quizSet);
+  // console.log('name of quiz OUTSIDE FUNCTION', name_of_quiz);
 
   const uploadPostToFirebase = async (posts) => {
-    await addDoc(colRef, doc(current_user.email), colGroupRef, {
+    const postRef = collection(db, 'users', `${current_user.email}`, `posts`);
+    addDoc(postRef, {
+      owner_uid: current_user.uid,
+      owner_email: current_user.email,
       subject_name: name_of_quiz,
-      post_q_a: posts,
-      createdAt: new Date(),
-    });
-
-    // const unsubscribe = db
-    //   .collection('users')
-    //   .doc(auth.currentUser.email)
-    //   .collectionGroup('posts')
-    //   .add({
-    //     user: currentLoggedInUser.username,
-    //     profile_picture: currentLoggedInUser.profilePicture,
-    //     owner_uid: auth().currentUser.uid,
-    //     owner_email: auth().currentUser.email,
-    //     subject_name: name_of_quiz,
-    //     post_q_a: posts,
-    //     createdAt: new Date(),
-    //   });
-    // return unsubscribe;
+      post_q_a: quizSet,
+    }).then(dispatch(setCreatingQuiz(false)));
   };
 
   const handleSubmitQuiz = () => {
-    uploadPostToFirebase(quizSet);
+    uploadPostToFirebase();
   };
 
-  // const getUserName = () => {
-  //   const user = auth.currentUser;
-  //   const unsubscribe = db
-  //     .collection('users')
-  //     .where('owner_uid', '==', user.uid)
-  //     .limit(1)
-  //     .onSnapshot((snapshot) =>
-  //       snapshot.docs.map((doc) => {
-  //         setCurrentLoggedInUser({
-  //           username: doc.data().username,
-  //           profilePicture: doc.data().profile_picture,
-  //         });
-  //       })
-  //     );
-  //   return unsubscribe;
-  // };
-
-  useEffect(() => {
-    // getUserName();
-  }, []);
-
   //   console.log('quizName', quizName);
-  console.log('name_of_quiz', name_of_quiz);
-  console.log('question', question);
-  console.log('answer', answer);
-  console.log('number', number);
-  console.log('quizSet', quizSet);
+  // console.log('name_of_quiz', name_of_quiz);
+  // console.log('question', question);
+  // console.log('answer', answer);
+  // console.log('number', number);
+  // console.log('quizSet', quizSet);
 
   return (
     <div className="add-quiz-container">

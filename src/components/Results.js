@@ -6,6 +6,7 @@ import {
   setFinalResults,
   setFinalScore,
   setQuizReset,
+  setViewResults,
   setGroups,
 } from '../redux/controls';
 import Button from './Button';
@@ -21,6 +22,7 @@ export default function Results() {
     dispatch(setActiveGroup(null));
     dispatch(setFinalResults(null));
     dispatch(setFinalScore(null));
+    dispatch(setViewResults(false));
     dispatch(setQuizReset(true));
   };
 

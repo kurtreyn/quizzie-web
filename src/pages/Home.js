@@ -15,18 +15,14 @@ import {
   groupsPresent,
 } from '../shared/quizInstructions';
 import { colGroupRef, db } from '../firebase';
-import { getDocs, doc, deleteDoc, collectionGroup } from 'firebase/firestore';
+import { getDocs, doc, deleteDoc } from 'firebase/firestore';
 import Menu from '../components/Menu';
-import AddQuizForm from '../components/AddQuizForm';
 import Quiz from '../components/Quiz';
-import Instructions from '../components/Instructions';
-import Button from '../components/Button';
 import Results from '../components/Results';
-import GroupContainer from '../components/GroupContainer';
 
 import ControlsSection from '../components/ControlsSection';
 import QuizListandFormSection from '../components/QuizListandFormSection';
-import qzzIcon from '../assets/icon.png';
+// import qzzIcon from '../assets/icon.png';
 
 import '../styles/homeStyle.css';
 
@@ -44,7 +40,7 @@ export default function Home() {
   const { current_user } = useSelector((state) => state.user);
   const [mode, setMode] = useState('new_user');
   const [quizActive, setQuizActive] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
   let groupLength;
 
@@ -59,17 +55,19 @@ export default function Home() {
   };
 
   const handleQuizStatus = (theId) => {
-    console.log('handleQuizStatus theId:', theId);
-    let chosenGroup = groups.map((group) => {
+    // console.log('handleQuizStatus theId:', theId);
+    // groups.map((group) => console.log(group));
+    let chosenGroup = groups.filter((group) => {
       if (group.id === theId) {
         return group;
       }
     });
+
     setQuizActive(true);
     dispatch(setActiveGroup(chosenGroup));
   };
 
-  const runUnsubscribe = () => {
+  const runFetchQuizzes = () => {
     getDocs(colGroupRef)
       .then((snapshot) => {
         let posts = [];
@@ -85,7 +83,6 @@ export default function Home() {
 
   const deleteGroup = (postId) => {
     const docRef = doc(db, 'posts', postId);
-
     deleteDoc(docRef).then(() => {
       console.log('deleted post:', postId);
     });
@@ -98,45 +95,59 @@ export default function Home() {
   useEffect(() => {
     setQuizActive(false);
     dispatch(setQuizReset(false));
-    runUnsubscribe();
-    if (current_user) {
+    runFetchQuizzes();
+    if (current_user && groups) {
       setMode('returning_user');
     }
   }, [groupLength, quiz_reset]);
 
   // console.log(`button_disabled`, button_disabled);
-  console.log('current_user', current_user);
-  console.log(`creating_quiz`, creating_quiz);
-  console.log('groups', groups);
-  console.log('mode', mode);
+  // console.log('current_user', current_user);
+  // console.log(`creating_quiz`, creating_quiz);
+  // console.log('groups', groups);
+  // console.log('mode', mode);
+  // console.log('active_group', active_group);
 
   return (
     <div className="home-container">
       <Menu />
       <div className="main-section">
-        <ControlsSection
-          mode={mode}
-          groupsPresent={groupsPresent}
-          button_disabled={button_disabled}
-          handleCreateQuiz={handleCreateQuiz}
-          groups={groups}
-          creating_quiz={creating_quiz}
-          has_quiz_name={has_quiz_name}
-          firstSetOfInstructions={firstSetOfInstructions}
-          secondSetOfInstructions={secondSetOfInstructions}
-          thirdSetOfInstructions={thirdSetOfInstructions}
-        />
-        <QuizListandFormSection
-          mode={mode}
-          groups={groups}
-          handleQuizStatus={handleQuizStatus}
-          creating_quiz={creating_quiz}
-        />
+        {!quizActive && (
+          <ControlsSection
+            mode={mode}
+            groupsPresent={groupsPresent}
+            button_disabled={button_disabled}
+            handleCreateQuiz={handleCreateQuiz}
+            groups={groups}
+            creating_quiz={creating_quiz}
+            has_quiz_name={has_quiz_name}
+            firstSetOfInstructions={firstSetOfInstructions}
+            secondSetOfInstructions={secondSetOfInstructions}
+            thirdSetOfInstructions={thirdSetOfInstructions}
+          />
+        )}
+        {!quizActive && (
+          <QuizListandFormSection
+            mode={mode}
+            groups={groups}
+            handleQuizStatus={handleQuizStatus}
+            creating_quiz={creating_quiz}
+          />
+        )}
       </div>
 
       {quizActive && !view_results && (
         <div className="quiz-section">
-          <Quiz />
+          {active_group &&
+            active_group.map((group, index) => {
+              return (
+                <Quiz
+                  group={group}
+                  key={index}
+                  subjectName={group.subject_name}
+                />
+              );
+            })}
         </div>
       )}
 
