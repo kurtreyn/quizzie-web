@@ -1,4 +1,4 @@
-# Quizzie
+# QzZ (pronounced: quizzie)
 
 ## By: Kurt Reynolds
 

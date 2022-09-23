@@ -36,11 +36,13 @@ export default function ControlsSection({
             ) : (
               <Instructions insturctions={thirdSetOfInstructions} />
             )}
-            <Button
-              label="Create Quiz"
-              disabled={button_disabled}
-              onClick={handleCreateQuiz}
-            />
+            {!creating_quiz && (
+              <Button
+                label="Create Quiz"
+                disabled={button_disabled}
+                onClick={handleCreateQuiz}
+              />
+            )}
           </>
         ))}
 

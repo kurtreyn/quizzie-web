@@ -58,4 +58,63 @@
 
 /* ---------- MOBILE SECTION ----------- */
 @media only screen and (max-width: 600px) {
+  .results-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 300px;
+  }
+
+  .results-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin-top: 2%;
+  }
+
+  .score-text {
+    font-size: 1.5rem;
+    color: #4b134f;
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+
+  .results-inner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 100px;
+    margin-left: 10px;
+    overflow: scroll;
+  }
+
+  .results-question-text {
+    color: #000;
+    font-size: 1rem;
+  }
+
+  .results-wrong-answer-text {
+    color: red;
+    font-size: 1rem;
+  }
+
+  .results-correct-answer-text {
+    color: #000;
+    font-size: 1rem;
+  }
+
+  .results-footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
+  }
 }

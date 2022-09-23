@@ -6,6 +6,7 @@
 
 .main-section {
   display: flex;
+  margin-top: 100px;
 }
 
 .controls-section {
@@ -40,13 +41,15 @@
   .main-section {
     display: flex;
     flex-direction: column;
+    margin-top: 20px;
   }
 
   .controls-section {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
+    min-height: 200px;
   }
 
   .quiz-and-list-section {

@@ -6,7 +6,8 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import Menu from '../components/Menu';
-import quizzieLogo from '../assets/icon.png';
+import qzzLogo from '../assets/icon.png';
+import Button from '../components/Button';
 import '../styles/loginStyle.css';
 
 export default function Login() {
@@ -14,21 +15,20 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mode, setMode] = useState('login');
 
   function signIn(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
   async function handleLogin() {
-    setLoading(true);
     try {
-      await signIn(email, password);
+      setLoading(true);
+      await signIn(email, password).then(setLoading(false)).then(navigate('/'));
     } catch (error) {
       console.log(error.message);
-      alert('Error');
+      alert('Error', error);
     }
-    setLoading(false);
-    navigate('/');
   }
 
   function signupUser(email, password) {
@@ -36,18 +36,30 @@ export default function Login() {
   }
 
   async function handleSignup() {
-    setLoading(true);
     try {
-      await signupUser(email, password);
-      alert(
-        'Signup Successful. Now just enter your username & password and click the Login button'
-      );
+      setLoading(true);
+      await signupUser(email, password)
+        .then(
+          alert(
+            'Signup Successful. Now just enter your username & password and click the Login button'
+          )
+        )
+        .then(setLoading(false))
+        .then(setMode('login'));
     } catch (error) {
       console.log(error);
-      alert('Error');
+      alert('Error', error.message);
     }
-    setLoading(false);
   }
+
+  const handleMode = () => {
+    if (mode === 'login') {
+      setMode('signup');
+    }
+    if (mode === 'signup') {
+      setMode('login');
+    }
+  };
 
   return (
     <div className="login-container">
@@ -58,7 +70,7 @@ export default function Login() {
       <div className="login-body">
         <div className="left-body">
           <div className="welcome-section">
-            <img src={quizzieLogo} alt="logo" className="login-logo" />
+            <img src={qzzLogo} alt="logo" className="login-logo" />
           </div>
         </div>
         <div className="right-body">
@@ -75,25 +87,20 @@ export default function Login() {
               className="login-input login-input-password"
               onChange={(e) => setPassword(e.target.value)}
             />
-            <button
-              className="login-button"
-              disabled={loading}
-              onClick={handleLogin}
-            >
-              <span className="login-button-text">Login</span>
-            </button>
+
+            {mode === 'login' && (
+              <Button btnType="login" label="Login" onClick={handleLogin} />
+            )}
+
+            {mode === 'signup' && (
+              <Button btnType="signup" label="Signup" onClick={handleSignup} />
+            )}
 
             <div className="form-footer">
               <span className="form-footer-text">Don't have an account?</span>
-              <span
-                className="form-footer-text link-text"
-                onClick={handleSignup}
-              >
-                Signup
+              <span className="form-footer-text link-text" onClick={handleMode}>
+                {mode === 'login' ? 'Signup' : 'Login'}
               </span>
-              {/* <a href="/signup" className="form-footer-text link-text">
-                Signup
-              </a> */}
             </div>
           </form>
         </div>

@@ -88,6 +88,7 @@ export default function Home() {
   useEffect(() => {
     setQuizActive(false);
     dispatch(setQuizReset(false));
+    dispatch(setCreatingQuiz(false));
     runFetchQuizzes();
     if (current_user && groups) {
       setMode('returning_user');

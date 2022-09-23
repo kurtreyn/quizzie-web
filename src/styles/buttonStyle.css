@@ -249,11 +249,6 @@
   margin-bottom: 1rem;
 }
 
-.answerBtn:hover {
-  background: #a93440;
-  color: #f6f9fe;
-}
-
 .endQuizBtn {
   width: 300px;
   margin-left: 5px;
@@ -366,4 +361,92 @@
 .viewResultsBtn:hover {
   background: #e43f60;
   color: #f6f9fe;
+}
+
+.loginBtn {
+  width: 200px;
+  margin-left: 5px;
+  margin-right: 5px;
+  align-items: center;
+  appearance: none;
+  background: #005c97;
+  background: -webkit-linear-gradient(to right, #363795, #005c97);
+  background: linear-gradient(to right, #363795, #005c97);
+
+  border-radius: 24px;
+  border-style: none;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  box-sizing: border-box;
+  color: #3c4043;
+  cursor: pointer;
+  display: inline-flex;
+  fill: currentcolor;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
+  height: 48px;
+  justify-content: center;
+  letter-spacing: 0.25px;
+  line-height: normal;
+  max-width: 100%;
+  overflow: visible;
+  padding: 2px 24px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  /* width: auto; */
+  will-change: transform, opacity;
+  z-index: 0;
+  margin-bottom: 1rem;
+}
+
+.signupBtn {
+  width: 200px;
+  margin-left: 5px;
+  margin-right: 5px;
+  align-items: center;
+  appearance: none;
+  background: #ff0084;
+  background: -webkit-linear-gradient(to right, #33001b, #ff0084);
+  background: linear-gradient(to right, #33001b, #ff0084);
+
+  border-radius: 24px;
+  border-style: none;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 3px 5px -1px,
+    rgba(0, 0, 0, 0.14) 0 6px 10px 0, rgba(0, 0, 0, 0.12) 0 1px 18px 0;
+  box-sizing: border-box;
+  color: #3c4043;
+  cursor: pointer;
+  display: inline-flex;
+  fill: currentcolor;
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
+  height: 48px;
+  justify-content: center;
+  letter-spacing: 0.25px;
+  line-height: normal;
+  max-width: 100%;
+  overflow: visible;
+  padding: 2px 24px;
+  position: relative;
+  text-align: center;
+  text-transform: none;
+  transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, 0.2, 1) 0ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  /* width: auto; */
+  will-change: transform, opacity;
+  z-index: 0;
+  margin-bottom: 1rem;
 }

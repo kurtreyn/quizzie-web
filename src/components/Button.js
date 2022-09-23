@@ -20,6 +20,12 @@ export default function Button({ label, disabled, onClick, btnType }) {
     if (btnType === 'viewResults') {
       setButtonClass('viewResultsBtn');
     }
+    if (btnType === 'login') {
+      setButtonClass('loginBtn');
+    }
+    if (btnType === 'signup') {
+      setButtonClass('signupBtn');
+    }
   }, [btnType]);
 
   return (
