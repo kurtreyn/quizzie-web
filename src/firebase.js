@@ -34,7 +34,3 @@ export const auth = getAuth();
 export const storage = getStorage();
 // init services
 export const db = getFirestore();
-
-// collection ref
-export const colGroupRef = collectionGroup(db, 'posts');
-export const colRef = collection(db, 'users');

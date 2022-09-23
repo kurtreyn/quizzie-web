@@ -17,6 +17,9 @@ export default function Results() {
   );
   const dispatch = useDispatch();
 
+  const finalPercent = (final_score / points_possible) * 100;
+  console.log(finalPercent);
+
   const resetQuiz = () => {
     dispatch(setActiveGroup(null));
     dispatch(setFinalResults(null));
@@ -31,8 +34,9 @@ export default function Results() {
     <div className="results-container">
       <div className="results-header">
         <span className="score-text">
-          Final Score: {final_score} out of {points_possible}
+          Final Score: {final_score} out of {points_possible} questions
         </span>
+        <span className="score-text">{finalPercent}%</span>
       </div>
       {final_results &&
         final_results.map((result, index) => {

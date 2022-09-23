@@ -64,8 +64,6 @@ export default function AddQuizForm({ runFetchQuizes }) {
     setQuizName('');
     setNumber(0);
   };
-  // console.log('posts OUTSIDE FUNCTION', quizSet);
-  // console.log('name of quiz OUTSIDE FUNCTION', name_of_quiz);
 
   const uploadPostToFirebase = async (posts) => {
     const postRef = collection(db, 'users', `${current_user.email}`, `posts`);

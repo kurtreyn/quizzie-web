@@ -6,7 +6,6 @@ import {
   setGroups,
   setActiveGroup,
   setQuizReset,
-  setViewResults,
 } from '../redux/controls';
 import {
   firstSetOfInstructions,
@@ -14,12 +13,11 @@ import {
   thirdSetOfInstructions,
   groupsPresent,
 } from '../shared/quizInstructions';
-import { colGroupRef, db } from '../firebase';
+import { db } from '../firebase';
 import { getDocs, doc, deleteDoc, collection } from 'firebase/firestore';
 import Menu from '../components/Menu';
 import Quiz from '../components/Quiz';
 import Results from '../components/Results';
-
 import ControlsSection from '../components/ControlsSection';
 import QuizListandFormSection from '../components/QuizListandFormSection';
 // import qzzIcon from '../assets/icon.png';

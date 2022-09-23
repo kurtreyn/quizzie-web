@@ -1,7 +1,6 @@
 import React from 'react';
 import Instructions from './Instructions';
 import Button from './Button';
-// import GroupContainer from './GroupContainer';
 
 export default function ControlsSection({
   mode,
@@ -9,7 +8,6 @@ export default function ControlsSection({
   button_disabled,
   handleCreateQuiz,
   groups,
-  handleQuizStatus,
   creating_quiz,
   firstSetOfInstructions,
   secondSetOfInstructions,

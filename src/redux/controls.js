@@ -35,7 +35,7 @@ export const controlsSlice = createSlice({
       state.points_possible = action.payload;
     },
     setFinalScore: (state, action) => {
-      state.points_possible = action.payload;
+      state.final_score = action.payload;
     },
     setFinalResults: (state, action) => {
       state.final_results = action.payload;

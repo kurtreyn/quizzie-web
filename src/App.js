@@ -4,7 +4,6 @@ import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useDispatch } from 'react-redux';
 import { setCurrentUserDispatch } from './redux/user';
-// import { firebase } from './firebase';
 import Nav from './components/Nav';
 import './styles/appStyle.css';
 
