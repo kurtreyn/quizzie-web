@@ -29,4 +29,32 @@
 
 /* ---------- MOBILE SECTION ----------- */
 @media only screen and (max-width: 600px) {
+  .group-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #b92b27;
+    background: -webkit-linear-gradient(to right, #1565c0, #b92b27);
+    background: linear-gradient(to right, #1565c0, #b92b27);
+
+    border-radius: 10;
+    border: solid 2px #1565c0;
+    width: 25%;
+    height: 75px;
+    margin: 0.5rem;
+    cursor: pointer;
+  }
+
+  .group-inner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24%;
+    height: 70px;
+  }
+
+  .group-text {
+    color: #fff;
+    font-size: 1rem;
+  }
 }
