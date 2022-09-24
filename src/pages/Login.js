@@ -89,11 +89,21 @@ export default function Login() {
             />
 
             {mode === 'login' && (
-              <Button btnType="login" label="Login" onClick={handleLogin} />
+              <Button
+                btnType="login"
+                label="Login"
+                type="submit"
+                onClick={handleLogin}
+              />
             )}
 
             {mode === 'signup' && (
-              <Button btnType="signup" label="Signup" onClick={handleSignup} />
+              <Button
+                btnType="signup"
+                label="Signup"
+                type="submit"
+                onClick={handleSignup}
+              />
             )}
 
             <div className="form-footer">

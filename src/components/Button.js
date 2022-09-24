@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/buttonStyle.css';
 
-export default function Button({ label, disabled, onClick, btnType }) {
+export default function Button({ label, disabled, onClick, btnType, type }) {
   const [buttonClass, setButtonClass] = useState('btn');
 
   useEffect(() => {
@@ -29,7 +29,12 @@ export default function Button({ label, disabled, onClick, btnType }) {
   }, [btnType]);
 
   return (
-    <button className={buttonClass} disabled={disabled} onClick={onClick}>
+    <button
+      className={buttonClass}
+      disabled={disabled}
+      type={type}
+      onClick={onClick}
+    >
       <span className="btn-text">{label}</span>
     </button>
   );
