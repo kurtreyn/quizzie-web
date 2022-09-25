@@ -4,6 +4,7 @@ import { auth } from '../firebase';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import Menu from '../components/Menu';
 import qzzLogo from '../assets/icon.png';
@@ -16,6 +17,9 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState('login');
+  const actionCodeSettings = {
+    url: 'https://qzzweb.netlify.app',
+  };
 
   function signIn(email, password) {
     return signInWithEmailAndPassword(auth, email, password);
@@ -51,6 +55,14 @@ export default function Login() {
       alert('Error', error.message);
     }
   }
+
+  const handleResetPassword = () => {
+    sendPasswordResetEmail(auth, email)
+      .then(alert('An email with a password reset has been sent'))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
 
   const handleMode = () => {
     if (mode === 'login') {
@@ -110,6 +122,13 @@ export default function Login() {
               <span className="form-footer-text">Don't have an account?</span>
               <span className="form-footer-text link-text" onClick={handleMode}>
                 {mode === 'login' ? 'Signup' : 'Login'}
+              </span>
+              <span className="form-footer-text">Or</span>
+              <span
+                className="form-footer-text link-text"
+                onClick={handleResetPassword}
+              >
+                Reset Password
               </span>
             </div>
           </form>

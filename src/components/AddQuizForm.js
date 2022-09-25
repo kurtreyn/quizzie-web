@@ -7,11 +7,11 @@ import {
   setNewQuizAdded,
 } from '../redux/controls';
 import { db } from '../firebase';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import Button from './Button';
 import '../styles/addQuizFormStyle.css';
 
-export default function AddQuizForm({ runFetchQuizes }) {
+export default function AddQuizForm() {
   const dispatch = useDispatch();
   const { has_quiz_name, name_of_quiz } = useSelector(
     (state) => state.controls
@@ -73,6 +73,7 @@ export default function AddQuizForm({ runFetchQuizes }) {
       owner_email: current_user.email,
       subject_name: name_of_quiz,
       post_q_a: quizSet,
+      createdAt: serverTimestamp(),
     })
       .then(dispatch(setCreatingQuiz(false)))
       .then(dispatch(setNewQuizAdded(true)));

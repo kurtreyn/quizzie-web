@@ -14,7 +14,14 @@ import {
   groupsPresent,
 } from '../shared/quizInstructions';
 import { db } from '../firebase';
-import { getDocs, doc, deleteDoc, collection } from 'firebase/firestore';
+import {
+  getDocs,
+  doc,
+  deleteDoc,
+  collection,
+  query,
+  orderBy,
+} from 'firebase/firestore';
 import Menu from '../components/Menu';
 import Quiz from '../components/Quiz';
 import Results from '../components/Results';
@@ -60,7 +67,10 @@ export default function Home() {
   };
 
   const runFetchQuizzes = () => {
-    const postRef = collection(db, 'users', `${current_user.email}`, `posts`);
+    const postRef = query(
+      collection(db, 'users', `${current_user.email}`, `posts`),
+      orderBy('createdAt', 'desc')
+    );
     getDocs(postRef)
       .then((snapshot) => {
         let posts = [];
