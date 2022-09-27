@@ -35,6 +35,11 @@
 .results-question-text {
   color: #000;
   font-size: 1rem;
+  font-weight: 600;
+}
+
+.results-question-title {
+  font-weight: 600;
 }
 
 .results-wrong-answer-text {

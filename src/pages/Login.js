@@ -119,17 +119,24 @@ export default function Login() {
             )}
 
             <div className="form-footer">
-              <span className="form-footer-text">Don't have an account?</span>
-              <span className="form-footer-text link-text" onClick={handleMode}>
-                {mode === 'login' ? 'Signup' : 'Login'}
-              </span>
-              <span className="form-footer-text">Or</span>
-              <span
-                className="form-footer-text link-text"
-                onClick={handleResetPassword}
-              >
-                Reset Password
-              </span>
+              <div className="signup-link-wrapper">
+                <span className="form-footer-text">Don't have an account?</span>
+                <span
+                  className="form-footer-text link-text"
+                  onClick={handleMode}
+                >
+                  {mode === 'login' ? 'Signup' : 'Login'}
+                </span>
+              </div>
+              <div className="forgot-password-container">
+                <span className="form-footer-text">Forgot your password?</span>
+                <span
+                  className="form-footer-text link-text"
+                  onClick={handleResetPassword}
+                >
+                  Reset Password
+                </span>
+              </div>
             </div>
           </form>
         </div>

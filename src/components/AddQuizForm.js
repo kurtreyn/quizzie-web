@@ -133,7 +133,7 @@ export default function AddQuizForm() {
             <Button label="Add Question & Answer" onClick={handleAddQandA} />
             <Button
               btnType="submit"
-              label="Submit"
+              label="Submit Quiz"
               onClick={handleSubmitQuiz}
             />
             <Button btnType="reset" label="Reset" onClick={handleReset} />

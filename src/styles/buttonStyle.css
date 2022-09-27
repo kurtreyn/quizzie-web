@@ -201,7 +201,8 @@
   display: inline-flex;
   fill: currentcolor;
   font-family: 'Google Sans', Roboto, Arial, sans-serif;
-  font-size: 14px;
+  font-size: 12px;
+  text-size-adjust: auto;
   font-weight: 500;
   color: var(--white);
   height: 48px;
@@ -599,7 +600,8 @@
     display: inline-flex;
     fill: currentcolor;
     font-family: 'Google Sans', Roboto, Arial, sans-serif;
-    font-size: 14px;
+    font-size: 12px;
+    text-size-adjust: auto;
     font-weight: 500;
     color: var(--white);
     height: 48px;

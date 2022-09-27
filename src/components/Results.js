@@ -6,6 +6,7 @@ import {
   setFinalScore,
   setQuizReset,
   setViewResults,
+  setButtonDisabled,
 } from '../redux/controls';
 import Button from './Button';
 import '../styles/resultsStyle.css';
@@ -23,6 +24,7 @@ export default function Results() {
     dispatch(setFinalScore(null));
     dispatch(setViewResults(false));
     dispatch(setQuizReset(true));
+    dispatch(setButtonDisabled(false));
   };
 
   return (
@@ -38,7 +40,7 @@ export default function Results() {
           return (
             <div className="results-inner-container" key={index}>
               <span className="results-question-text">
-                Question: {result.askedQuestion}
+                Question: {result.askedQuestion}?
               </span>
               <span
                 className={
@@ -47,10 +49,12 @@ export default function Results() {
                     : 'results-wrong-answer-text'
                 }
               >
-                Selected Answer: {result.selectedAnswer}
+                <span className="results-question-title">Selected Answer:</span>{' '}
+                {result.selectedAnswer}
               </span>
               <span className="results-correct-answer-text">
-                Correct Answer: {result.correctAnswer}
+                <span className="results-question-title">Correct Answer:</span>{' '}
+                {result.correctAnswer}
               </span>
             </div>
           );

@@ -63,9 +63,18 @@
 
 .form-footer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
+}
+
+.signup-link-wrapper {
+  display: flex;
+}
+
+.forgot-password-container {
+  display: flex;
 }
 
 .form-footer-text {

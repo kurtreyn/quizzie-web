@@ -4,7 +4,8 @@ export const firstSetOfInstructions = () => {
       <h1 className="instructions-header">Welcome to Quizzie!</h1>
       <p className="instructions-text">
         Now that you've signed up, let's start making some quizzes! Start by
-        pressing the "<strong>Create Quiz</strong>" button.
+        pressing the "<strong className="click-reference">Create Quiz</strong>"
+        button.
       </p>
     </div>
   );
@@ -25,9 +26,11 @@ export const thirdSetOfInstructions = () => {
     <div className="instructions-wrapper">
       <p className="instructions-text">
         Solid name! Now lets add some questions and answers. When you're
-        finished, just click the <strong>Submit Quiz</strong> button.
+        finished, just click the{' '}
+        <strong className="click-reference">Submit Quiz</strong> button.
         <br />
-        Or, if you need to start over click the <strong>Reset Button</strong>
+        Or, if you need to start over click the{' '}
+        <strong className="click-reference">Reset Button</strong>
       </p>
     </div>
   );
@@ -41,7 +44,7 @@ export const groupsPresent = () => {
         your existing quizes, just click on the Quiz you would like to take.
         <br />
         Or, if you want to add another Quiz, click the{' '}
-        <strong>Create Quiz</strong> button.
+        <strong className="click-reference">Create Quiz</strong> button.
       </p>
     </div>
   );
