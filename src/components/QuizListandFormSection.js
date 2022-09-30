@@ -1,6 +1,7 @@
 import React from 'react';
 import GroupContainer from './GroupContainer';
 import AddQuizForm from './AddQuizForm';
+import Modal from './Modal';
 
 export default function QuizListandFormSection({
   mode,
@@ -8,7 +9,21 @@ export default function QuizListandFormSection({
   handleQuizStatus,
   creating_quiz,
   runFetchQuizes,
+  handleDeleteQuiz,
+  showModal,
+  setShowModal,
+  setQuizId,
 }) {
+  const handleSetQuizId = (id) => {
+    setQuizId(id);
+    setShowModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setQuizId(null);
+    setShowModal(false);
+  };
+
   return (
     <div className="quiz-and-list-section">
       {mode === 'new_user' ||
@@ -26,10 +41,15 @@ export default function QuizListandFormSection({
                 label={group.subject_name}
                 group={group}
                 onClick={() => handleQuizStatus(group.id)}
+                onMouseUp={() => handleSetQuizId(group.id)}
               />
             );
           })}
         </div>
+      )}
+
+      {showModal && (
+        <Modal onMouseUp={handleDeleteQuiz} onClick={handleCancelDelete} />
       )}
     </div>
   );

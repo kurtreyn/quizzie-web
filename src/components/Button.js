@@ -14,6 +14,9 @@ export default function Button({ label, disabled, onClick, btnType, type }) {
     if (btnType === 'answerBtn') {
       setButtonClass('answerBtn');
     }
+    if (btnType === 'longAnswerBtn') {
+      setButtonClass('longAnswerBtn');
+    }
     if (btnType === 'endQuiz') {
       setButtonClass('endQuizBtn');
     }

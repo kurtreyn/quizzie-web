@@ -1,5 +1,6 @@
 .group-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background: #b92b27;
@@ -25,6 +26,18 @@
 .group-text {
   color: #fff;
   font-size: 1rem;
+}
+
+.edit-quiz-options-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  /* outline: solid 1px white; */
+}
+
+.group-container-icon {
+  width: 15px;
 }
 
 /* ---------- MOBILE SECTION ----------- */
