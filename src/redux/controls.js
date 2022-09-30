@@ -15,6 +15,7 @@ export const controlsSlice = createSlice({
     quiz_reset: false,
     view_results: false,
     new_quiz_added: false,
+    edit_quiz: false,
   },
   reducers: {
     setButtonDisabled: (state, action) => {
@@ -53,6 +54,9 @@ export const controlsSlice = createSlice({
     setNewQuizAdded: (state, action) => {
       state.new_quiz_added = action.payload;
     },
+    setEditQuiz: (state, action) => {
+      state.edit_quiz = action.payload;
+    },
   },
 });
 
@@ -69,6 +73,7 @@ export const {
   setQuizReset,
   setViewResults,
   setNewQuizAdded,
+  setEditQuiz,
 } = controlsSlice.actions;
 
 export default controlsSlice.reducer;

@@ -6,6 +6,7 @@ import {
   setGroups,
   setActiveGroup,
   setQuizReset,
+  setEditQuiz,
 } from '../redux/controls';
 import {
   firstSetOfInstructions,
@@ -40,10 +41,13 @@ export default function Home() {
     quiz_reset,
     view_results,
     new_quiz_added,
+    edit_quiz,
   } = useSelector((state) => state.controls);
   const { current_user } = useSelector((state) => state.user);
   const [mode, setMode] = useState('new_user');
   const [quizActive, setQuizActive] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [quizId, setQuizId] = useState(null);
   let groupLength;
   if (groups) {
     groupLength = groups.length;
@@ -83,15 +87,20 @@ export default function Home() {
       });
   };
 
-  const deleteGroup = (postId) => {
-    const docRef = doc(db, 'posts', postId);
-    deleteDoc(docRef).then(() => {
-      console.log('deleted post:', postId);
-    });
+  const deleteQuiz = async (postId) => {
+    const docRef = doc(db, 'users', `${current_user.email}`, `posts`, postId);
+    await deleteDoc(docRef)
+      .then(alert('Quiz has been deleted'))
+      .then(runFetchQuizzes())
+      .catch((error) => {
+        alert(error);
+      });
   };
 
-  const handleDeleteQuiz = (postId) => {
-    deleteGroup(postId);
+  const handleDeleteQuiz = () => {
+    deleteQuiz(quizId);
+    setShowModal(false);
+    setQuizId(null);
   };
 
   useEffect(() => {
@@ -129,6 +138,11 @@ export default function Home() {
             handleQuizStatus={handleQuizStatus}
             creating_quiz={creating_quiz}
             runFetchQuizzes={runFetchQuizzes}
+            handleDeleteQuiz={handleDeleteQuiz}
+            showModal={showModal}
+            setShowModal={setShowModal}
+            quizId={quizId}
+            setQuizId={setQuizId}
           />
         )}
       </div>
