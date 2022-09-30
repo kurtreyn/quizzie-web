@@ -1,5 +1,4 @@
 import React from 'react';
-import Modal from './Modal';
 import trashIcon from '../assets/trash.svg';
 
 import '../styles/groupContainerStyle.css';

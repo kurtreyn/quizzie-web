@@ -42,8 +42,6 @@ export default function QuizListandFormSection({
                 group={group}
                 onClick={() => handleQuizStatus(group.id)}
                 onMouseUp={() => handleSetQuizId(group.id)}
-                showModal={showModal}
-                // onMouseUp={() => handleDeleteQuiz(group.id)}
               />
             );
           })}

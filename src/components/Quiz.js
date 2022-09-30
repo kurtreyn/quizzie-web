@@ -18,10 +18,17 @@ export default function Quiz({ subjectName, group }) {
   const [results, setResults] = useState([]);
   const [rightAnswer, setRightAnswer] = useState('');
   const [currentQuestion, setCurrentQuestion] = useState('');
+  const [longAnswerMode, setLongAnswerMode] = useState(false);
   const { post_q_a } = group;
-
   let answers = post_q_a.map((answer) => answer.correct_answer);
   let pointsPossible = answers.length;
+  let longestAnswer = 0;
+
+  for (let answer of answers) {
+    if (answer.length > longestAnswer) {
+      longestAnswer = answer.length;
+    }
+  }
 
   const shuffle = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
@@ -109,7 +116,13 @@ export default function Quiz({ subjectName, group }) {
       dispatch(setFinalScore(score));
       dispatch(setPointsPossible(pointsPossible));
     }
-  }, [disabled]);
+    if (longestAnswer > 100) {
+      setLongAnswerMode(true);
+    }
+  }, [disabled, longestAnswer]);
+
+  console.log('longestAnswer', longestAnswer);
+  console.log('longAnswerMode', longAnswerMode);
 
   return (
     <div className="quiz-container">
@@ -131,7 +144,7 @@ export default function Quiz({ subjectName, group }) {
                 {option.answerOptions[0] && (
                   <Button
                     key={'00'}
-                    btnType="answerBtn"
+                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
                     label={option.answerOptions[0]}
                     onClick={() => handleAnswer(option.answerOptions[0])}
                     disabled={disabled}
@@ -140,7 +153,7 @@ export default function Quiz({ subjectName, group }) {
                 {option.answerOptions[1] && (
                   <Button
                     key={'01'}
-                    btnType="answerBtn"
+                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
                     label={option.answerOptions[1]}
                     onClick={() => handleAnswer(option.answerOptions[1])}
                     disabled={disabled}
@@ -149,7 +162,7 @@ export default function Quiz({ subjectName, group }) {
                 {option.answerOptions[2] && (
                   <Button
                     key={'02'}
-                    btnType="answerBtn"
+                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
                     label={option.answerOptions[2]}
                     onClick={() => handleAnswer(option.answerOptions[2])}
                     disabled={disabled}
@@ -158,7 +171,7 @@ export default function Quiz({ subjectName, group }) {
                 {option.answerOptions[3] && (
                   <Button
                     key={'03'}
-                    btnType="answerBtn"
+                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
                     label={option.answerOptions[3]}
                     onClick={() => handleAnswer(option.answerOptions[3])}
                     disabled={disabled}
