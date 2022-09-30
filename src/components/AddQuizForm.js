@@ -5,6 +5,7 @@ import {
   setNameOfQuizDispatch,
   setCreatingQuiz,
   setNewQuizAdded,
+  setButtonDisabled,
 } from '../redux/controls';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -76,7 +77,8 @@ export default function AddQuizForm() {
       createdAt: serverTimestamp(),
     })
       .then(dispatch(setCreatingQuiz(false)))
-      .then(dispatch(setNewQuizAdded(true)));
+      .then(dispatch(setNewQuizAdded(true)))
+      .then(dispatch(setButtonDisabled(false)));
   };
 
   const handleSubmitQuiz = () => {

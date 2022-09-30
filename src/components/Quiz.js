@@ -105,7 +105,6 @@ export default function Quiz({ subjectName, group }) {
       runQuiz(post_q_a[index]);
     }
     if (disabled) {
-      console.log('FINAL SCORE IS:', score);
       dispatch(setFinalResults(results));
       dispatch(setFinalScore(score));
       dispatch(setPointsPossible(pointsPossible));
