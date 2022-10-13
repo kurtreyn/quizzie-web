@@ -17,12 +17,49 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState('login');
+  const [hasError, setHasError] = useState(false);
   const actionCodeSettings = {
     url: 'https://qzzweb.netlify.app',
   };
 
+  function checkForErrors() {
+    if (!email || email === '') {
+      setHasError(true);
+      alert('Must provide a valid email address');
+      resetForm();
+    } else if (!email.includes('@')) {
+      setHasError(true);
+      alert('Email address must contain @ symbol');
+      resetForm();
+    } else if (!password || password === '') {
+      setHasError(true);
+      alert('Must provide a password');
+      resetForm();
+    }
+  }
+
   function signIn(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+    checkForErrors();
+    if (!hasError) {
+      return signInWithEmailAndPassword(auth, email, password);
+    } else {
+      resetForm();
+    }
+  }
+
+  function signupUser(email, password) {
+    checkForErrors();
+    if (!hasError) {
+      return createUserWithEmailAndPassword(auth, email, password);
+    } else {
+      resetForm();
+    }
+  }
+
+  function resetForm() {
+    setEmail('');
+    setPassword('');
+    setHasError(false);
   }
 
   async function handleLogin() {
@@ -35,20 +72,16 @@ export default function Login() {
     }
   }
 
-  function signupUser(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
-  }
-
   async function handleSignup() {
     try {
       setLoading(true);
       await signupUser(email, password)
+        .then(setLoading(false))
         .then(
           alert(
             'Signup Successful. Now just enter your username & password and click the Login button'
           )
         )
-        .then(setLoading(false))
         .then(setMode('login'));
     } catch (error) {
       console.log(error);
@@ -56,9 +89,15 @@ export default function Login() {
     }
   }
 
+  console.log('ERROR PRESENT:', hasError);
+
   const handleResetPassword = () => {
     sendPasswordResetEmail(auth, email)
-      .then(alert('An email with a password reset has been sent'))
+      .then(
+        alert(
+          'An email with a password reset has been sent. You may need to check the Spam folder.'
+        )
+      )
       .catch((error) => {
         console.log(error.message);
       });
@@ -89,7 +128,7 @@ export default function Login() {
           <form action="" className="login-form">
             <input
               type="text"
-              placeholder="user name"
+              placeholder="email"
               className="login-input"
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -105,6 +144,7 @@ export default function Login() {
                 btnType="login"
                 label="Login"
                 type="submit"
+                disabled={hasError}
                 onClick={handleLogin}
               />
             )}
@@ -114,6 +154,7 @@ export default function Login() {
                 btnType="signup"
                 label="Signup"
                 type="submit"
+                disabled={hasError}
                 onClick={handleSignup}
               />
             )}
