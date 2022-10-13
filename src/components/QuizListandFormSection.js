@@ -49,7 +49,12 @@ export default function QuizListandFormSection({
       )}
 
       {showModal && (
-        <Modal onMouseUp={handleDeleteQuiz} onClick={handleCancelDelete} />
+        <Modal
+          warning="WARNING: This cannot be undone."
+          message="Are you sure you want to delete the Quiz?"
+          onMouseUp={handleDeleteQuiz}
+          onClick={handleCancelDelete}
+        />
       )}
     </div>
   );

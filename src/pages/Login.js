@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase';
 import {
@@ -26,34 +26,21 @@ export default function Login() {
     if (!email || email === '') {
       setHasError(true);
       alert('Must provide a valid email address');
-      resetForm();
     } else if (!email.includes('@')) {
       setHasError(true);
       alert('Email address must contain @ symbol');
-      resetForm();
     } else if (!password || password === '') {
       setHasError(true);
       alert('Must provide a password');
-      resetForm();
     }
   }
 
   function signIn(email, password) {
-    checkForErrors();
-    if (!hasError) {
-      return signInWithEmailAndPassword(auth, email, password);
-    } else {
-      resetForm();
-    }
+    return signInWithEmailAndPassword(auth, email, password);
   }
 
   function signupUser(email, password) {
-    checkForErrors();
-    if (!hasError) {
-      return createUserWithEmailAndPassword(auth, email, password);
-    } else {
-      resetForm();
-    }
+    return createUserWithEmailAndPassword(auth, email, password);
   }
 
   function resetForm() {
@@ -73,6 +60,7 @@ export default function Login() {
   }
 
   async function handleSignup() {
+    alert('HANDLING SIGNUP');
     try {
       setLoading(true);
       await signupUser(email, password)
@@ -82,6 +70,7 @@ export default function Login() {
             'Signup Successful. Now just enter your username & password and click the Login button'
           )
         )
+        .then(setLoading(false))
         .then(setMode('login'));
     } catch (error) {
       console.log(error);
@@ -89,7 +78,13 @@ export default function Login() {
     }
   }
 
-  console.log('ERROR PRESENT:', hasError);
+  const handleCall = () => {
+    checkForErrors()
+      .then(!hasError && mode === 'login' ? handleLogin() : handleSignup())
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleResetPassword = () => {
     sendPasswordResetEmail(auth, email)
@@ -111,6 +106,12 @@ export default function Login() {
       setMode('login');
     }
   };
+
+  useEffect(() => {
+    resetForm();
+  }, [hasError]);
+
+  console.log('hasError:', hasError);
 
   return (
     <div className="login-container">
@@ -145,7 +146,7 @@ export default function Login() {
                 label="Login"
                 type="submit"
                 disabled={hasError}
-                onClick={handleLogin}
+                onClick={handleCall}
               />
             )}
 
@@ -155,7 +156,7 @@ export default function Login() {
                 label="Signup"
                 type="submit"
                 disabled={hasError}
-                onClick={handleSignup}
+                onClick={handleCall}
               />
             )}
 
