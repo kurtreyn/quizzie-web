@@ -13,11 +13,14 @@ import '../styles/loginStyle.css';
 
 export default function Login() {
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passConfirm, setPassConfirm] = useState('');
   const [mode, setMode] = useState('login');
   const [hasError, setHasError] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const actionCodeSettings = {
     url: 'https://qzzweb.netlify.app',
   };
@@ -47,14 +50,14 @@ export default function Login() {
     }
   }
 
-  function signupUser(email, password) {
-    checkForErrors();
-    if (!hasError) {
-      return createUserWithEmailAndPassword(auth, email, password);
-    } else {
-      resetForm();
+  const handleMode = () => {
+    if (mode === 'login') {
+      setMode('signup');
     }
-  }
+    if (mode === 'signup') {
+      setMode('login');
+    }
+  };
 
   function resetForm() {
     setEmail('');
@@ -65,27 +68,29 @@ export default function Login() {
   async function handleLogin() {
     try {
       setLoading(true);
-      await signIn(email, password).then(setLoading(false)).then(navigate('/'));
+      await signIn(email, password).then(setLoading(false));
     } catch (error) {
       console.log(error.message);
       alert('Error', error);
     }
   }
 
-  async function handleSignup() {
-    try {
-      setLoading(true);
-      await signupUser(email, password)
-        .then(setLoading(false))
-        .then(
-          alert(
-            'Signup Successful. Now just enter your username & password and click the Login button'
-          )
-        )
-        .then(setMode('login'));
-    } catch (error) {
-      console.log(error);
-      alert('Error', error.message);
+  async function handleSignup(e) {
+    e.preventDefault();
+    if (password === passConfirm) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log('user', user);
+          alert('Account created successfully.');
+        })
+        .then(() => navigate('/'))
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log('errorCode', errorCode);
+          console.log('errorMessage', errorMessage);
+        });
     }
   }
 
@@ -101,15 +106,6 @@ export default function Login() {
       .catch((error) => {
         console.log(error.message);
       });
-  };
-
-  const handleMode = () => {
-    if (mode === 'login') {
-      setMode('signup');
-    }
-    if (mode === 'signup') {
-      setMode('login');
-    }
   };
 
   return (
@@ -138,6 +134,15 @@ export default function Login() {
               className="login-input login-input-password"
               onChange={(e) => setPassword(e.target.value)}
             />
+
+            {mode === 'signup' && (
+              <input
+                type="password"
+                placeholder="confirm password"
+                className="login-input login-input-password"
+                onChange={(e) => setPassConfirm(e.target.value)}
+              />
+            )}
 
             {mode === 'login' && (
               <Button
