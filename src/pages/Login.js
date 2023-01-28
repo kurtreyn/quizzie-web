@@ -65,10 +65,13 @@ export default function Login() {
     setHasError(false);
   }
 
-  async function handleLogin() {
+  async function handleLogin(e) {
+    e.preventDefault();
     try {
       setLoading(true);
-      await signIn(email, password).then(setLoading(false));
+      await signIn(email, password)
+        .then(setLoading(false))
+        .then(() => navigate('/'));
     } catch (error) {
       console.log(error.message);
       alert('Error', error);
