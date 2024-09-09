@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setHasQuizName,
@@ -25,6 +25,7 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
   const [isImgQuiz, setIsImgQuiz] = useState(false);
+  const formRef = useRef(null);
   const fb = new FirebaseClass();
 
   const handleAddQuestion = (e) => {
@@ -88,22 +89,10 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
     uploadPostToFirebase();
   };
 
-  const QuestionSection = () => {
-    return (
-      <>
-        <label htmlFor="question" className="add-quiz-label">
-          Enter Question
-        </label>
-        <input
-          id="question"
-          type="text"
-          value={question}
-          placeholder="enter the question here"
-          className="add-quiz-input"
-          onChange={handleAddQuestion}
-        />
-      </>
-    );
+  const handleSubmitImageQuiz = (e) => {
+    e.preventDefault();
+    const image = formRef.current["file-input"].files;
+    fb.addImageQuiz(current_user, name_of_quiz, quizSet, image);
   };
 
   return (
@@ -146,7 +135,17 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
           <>
             {!isImgQuiz ? (
               <form action="" className="add-quiz-form">
-                <QuestionSection />
+                <label htmlFor="question" className="add-quiz-label">
+                  Enter Question
+                </label>
+                <input
+                  id="question"
+                  type="text"
+                  value={question}
+                  placeholder="enter the question here"
+                  className="add-quiz-input"
+                  onChange={handleAddQuestion}
+                />
                 <label htmlFor="question" className="add-quiz-label">
                   Enter Answer
                 </label>
@@ -160,8 +159,18 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
                 />
               </form>
             ) : (
-              <form action="" className="add-quiz-form">
-                <QuestionSection />
+              <form action="" className="add-quiz-form" ref={formRef}>
+                <label htmlFor="question" className="add-quiz-label">
+                  Enter Question
+                </label>
+                <input
+                  id="question"
+                  type="text"
+                  value={question}
+                  placeholder="enter the question here"
+                  className="add-quiz-input"
+                  onChange={handleAddQuestion}
+                />
                 <input
                   id="file-input"
                   type="file"
@@ -174,7 +183,9 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
             <Button
               btnType="submit"
               label="Submit Quiz"
-              onClick={handleSubmitQuiz}
+              onClick={(e) =>
+                !isImgQuiz ? handleSubmitQuiz() : handleSubmitImageQuiz(e)
+              }
             />
             <Button btnType="reset" label="Reset" onClick={handleReset} />
           </>

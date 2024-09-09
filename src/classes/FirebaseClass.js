@@ -13,6 +13,7 @@ import {
   deleteDoc,
   onSnapshot,
   arrayRemove,
+  collection,
 } from "firebase/firestore";
 import { db, storage, postsRef } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
@@ -110,49 +111,18 @@ export default class FirebaseClass {
     return downloadURLs;
   }
 
-  async makePost(
-    givenTitle,
-    txtContent,
-    givenImages,
-    page,
-    pageParag,
-    txtOnly = false,
-    isSettings = false,
-    price = null,
-    tag = null
-  ) {
+  async addImageQuiz(current_user, name_of_quiz, quizSet, givenImages) {
     const postId = uuidv4();
-    const postRef = doc(db, "posts", postId);
+    const postRef = doc(db, "users", current_user.email, "posts", postId);
     await setDoc(postRef, {
-      id: postId,
-      images: [],
-      title: givenTitle,
-      txt_cont: txtContent,
-      page: page,
-      page_parag: pageParag,
-      only_text: txtOnly,
-      is_settings: isSettings,
-      price: price,
-      tag: tag,
+      owner_uid: current_user.uid,
+      owner_email: current_user.email,
+      subject_name: name_of_quiz,
+      post_q_a: quizSet,
       createdAt: serverTimestamp(),
     });
-    if (!txtOnly) {
-      const downloadURLs = await this.uploadImages(givenImages, postId);
-      await updateDoc(postRef, { images: downloadURLs });
-    }
-  }
-
-  async makeSettingsPost(isSettings, settingsFor, settings) {
-    const postId = uuidv4();
-    const settingsId = `${settingsFor}_${postId}`;
-    const postRef = doc(db, "posts", settingsId);
-    await setDoc(postRef, {
-      id: settingsId,
-      is_settings: isSettings,
-      settings_for: settingsFor,
-      settings: settings,
-      createdAt: serverTimestamp(),
-    });
+    const downloadURLs = await this.uploadImages(givenImages, postId);
+    await updateDoc(postRef, { images: downloadURLs });
   }
 
   async updatePost(postId, newTitle, newTxtCont, newPrice) {
@@ -172,48 +142,31 @@ export default class FirebaseClass {
       });
   }
 
-  async updateTextPost(
-    postId,
-    newTitle,
-    newTxtCont,
-    page,
-    pageParag,
-    txtOnly = true
-  ) {
-    const ac = new AlertClass();
-    const postRef = doc(db, "posts", postId);
+  // async updateTextPost(
+  //   postId,
+  //   newTitle,
+  //   newTxtCont,
+  //   page,
+  //   pageParag,
+  //   txtOnly = true
+  // ) {
+  //   const ac = new AlertClass();
+  //   const postRef = doc(db, "posts", postId);
 
-    updateDoc(postRef, {
-      title: newTitle,
-      txt_cont: newTxtCont,
-      page: page,
-      page_parag: pageParag,
-      only_text: txtOnly,
-    })
-      .then(() => {
-        ac.successAlert("Updated successfully");
-      })
-      .catch((error) => {
-        ac.errorAlert("Error updating post", error);
-      });
-  }
-
-  async updateSettingsPost(postId, isSettings, settingsFor, settings) {
-    const ac = new AlertClass();
-    const postRef = doc(db, "posts", postId);
-
-    updateDoc(postRef, {
-      is_settings: isSettings,
-      settings_for: settingsFor,
-      settings: settings,
-    })
-      .then(() => {
-        ac.successAlert("Updated successfully");
-      })
-      .catch((error) => {
-        ac.errorAlert("Error updating post", error);
-      });
-  }
+  //   updateDoc(postRef, {
+  //     title: newTitle,
+  //     txt_cont: newTxtCont,
+  //     page: page,
+  //     page_parag: pageParag,
+  //     only_text: txtOnly,
+  //   })
+  //     .then(() => {
+  //       ac.successAlert("Updated successfully");
+  //     })
+  //     .catch((error) => {
+  //       ac.errorAlert("Error updating post", error);
+  //     });
+  // }
 
   async addNewPostImages(postId, currentImages, newImages) {
     const ac = new AlertClass();
