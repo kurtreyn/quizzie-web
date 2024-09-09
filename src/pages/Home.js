@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setButtonDisabled,
   setCreatingQuiz,
@@ -7,14 +7,14 @@ import {
   setActiveGroup,
   setQuizReset,
   setEditQuiz,
-} from '../redux/controls';
+} from "../redux/controls";
 import {
   firstSetOfInstructions,
   secondSetOfInstructions,
   thirdSetOfInstructions,
   groupsPresent,
-} from '../shared/quizInstructions';
-import { db } from '../firebase';
+} from "../shared/quizInstructions";
+import { db } from "../firebase";
 import {
   getDocs,
   doc,
@@ -22,13 +22,13 @@ import {
   collection,
   query,
   orderBy,
-} from 'firebase/firestore';
-import Menu from '../components/Menu';
-import Quiz from '../components/Quiz';
-import Results from '../components/Results';
-import ControlsSection from '../components/ControlsSection';
-import QuizListandFormSection from '../components/QuizListandFormSection';
-import '../styles/homeStyle.css';
+} from "firebase/firestore";
+import Menu from "../components/Menu";
+import Quiz from "../components/Quiz";
+import Results from "../components/Results";
+import ControlsSection from "../components/ControlsSection";
+import QuizListandFormSection from "../components/QuizListandFormSection";
+import "../styles/homeStyle.css";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ export default function Home() {
     edit_quiz,
   } = useSelector((state) => state.controls);
   const { current_user } = useSelector((state) => state.user);
-  const [mode, setMode] = useState('new_user');
+  const [mode, setMode] = useState("new_user");
   const [quizActive, setQuizActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [quizId, setQuizId] = useState(null);
@@ -56,6 +56,11 @@ export default function Home() {
   const handleCreateQuiz = () => {
     dispatch(setButtonDisabled(true));
     dispatch(setCreatingQuiz(true));
+  };
+
+  const handleCancelCreateQuiz = () => {
+    dispatch(setButtonDisabled(false));
+    dispatch(setCreatingQuiz(false));
   };
 
   const handleQuizStatus = (theId) => {
@@ -71,8 +76,8 @@ export default function Home() {
 
   const runFetchQuizzes = () => {
     const postRef = query(
-      collection(db, 'users', `${current_user.email}`, `posts`),
-      orderBy('createdAt', 'desc')
+      collection(db, "users", `${current_user.email}`, `posts`),
+      orderBy("createdAt", "desc")
     );
     getDocs(postRef)
       .then((snapshot) => {
@@ -88,9 +93,9 @@ export default function Home() {
   };
 
   const deleteQuiz = async (postId) => {
-    const docRef = doc(db, 'users', `${current_user.email}`, `posts`, postId);
+    const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
     await deleteDoc(docRef)
-      .then(alert('Quiz has been deleted'))
+      .then(alert("Quiz has been deleted"))
       .then(runFetchQuizzes())
       .catch((error) => {
         alert(error);
@@ -109,13 +114,15 @@ export default function Home() {
     dispatch(setCreatingQuiz(false));
     runFetchQuizzes();
     if (current_user && groups) {
-      setMode('returning_user');
+      setMode("returning_user");
     }
   }, [groupLength, quiz_reset, new_quiz_added]);
 
+  console.log("creating_quiz:", creating_quiz);
+
   return (
     <div className="home-container">
-      <Menu />
+      <Menu handleCancelCreateQuiz={handleCancelCreateQuiz} />
       <div className="main-section">
         {!quizActive && (
           <ControlsSection

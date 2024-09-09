@@ -15,6 +15,7 @@
   width: 5rem;
   height: 5rem;
   margin-left: 2rem;
+  cursor: pointer;
 }
 
 .right-menu {
