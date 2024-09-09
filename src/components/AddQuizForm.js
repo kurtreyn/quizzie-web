@@ -8,6 +8,7 @@ import {
   setButtonDisabled,
 } from "../redux/controls";
 import { db } from "../firebase";
+import FirebaseClass from "../classes/FirebaseClass";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import Button from "./Button";
 import "../styles/addQuizFormStyle.css";
@@ -24,6 +25,7 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
   const [isImgQuiz, setIsImgQuiz] = useState(false);
+  const fb = new FirebaseClass();
 
   const handleAddQuestion = (e) => {
     setQuestion(e.target.value);
