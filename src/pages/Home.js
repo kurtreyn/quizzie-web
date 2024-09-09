@@ -146,6 +146,7 @@ export default function Home() {
             creating_quiz={creating_quiz}
             runFetchQuizzes={runFetchQuizzes}
             handleDeleteQuiz={handleDeleteQuiz}
+            handleCancelCreateQuiz={handleCancelCreateQuiz}
             showModal={showModal}
             setShowModal={setShowModal}
             quizId={quizId}

@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setHasQuizName,
   setNameOfQuizDispatch,
   setCreatingQuiz,
   setNewQuizAdded,
   setButtonDisabled,
-} from '../redux/controls';
-import { db } from '../firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import Button from './Button';
-import '../styles/addQuizFormStyle.css';
+} from "../redux/controls";
+import { db } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import Button from "./Button";
+import "../styles/addQuizFormStyle.css";
 
-export default function AddQuizForm() {
+export default function AddQuizForm({ handleCancelCreateQuiz }) {
   const dispatch = useDispatch();
   const { has_quiz_name, name_of_quiz } = useSelector(
     (state) => state.controls
   );
   const { current_user } = useSelector((state) => state.user);
   const [quizName, setQuizName] = useState(null);
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
 
@@ -55,20 +55,20 @@ export default function AddQuizForm() {
         ];
       });
     }
-    setQuestion('');
-    setAnswer('');
+    setQuestion("");
+    setAnswer("");
     setNumber(number + 1);
   };
 
   const handleReset = () => {
     dispatch(setHasQuizName(false));
-    dispatch(setNameOfQuizDispatch(''));
-    setQuizName('');
+    dispatch(setNameOfQuizDispatch(""));
+    setQuizName("");
     setNumber(0);
   };
 
   const uploadPostToFirebase = async (posts) => {
-    const postRef = collection(db, 'users', `${current_user.email}`, `posts`);
+    const postRef = collection(db, "users", `${current_user.email}`, `posts`);
     addDoc(postRef, {
       owner_uid: current_user.uid,
       owner_email: current_user.email,
@@ -141,6 +141,11 @@ export default function AddQuizForm() {
             <Button btnType="reset" label="Reset" onClick={handleReset} />
           </>
         )}
+        <Button
+          label="Cancel"
+          btnType="cancel"
+          onClick={handleCancelCreateQuiz}
+        />
       </div>
     </div>
   );
