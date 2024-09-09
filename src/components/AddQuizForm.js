@@ -23,6 +23,7 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
   const [answer, setAnswer] = useState("");
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
+  const [isImgQuiz, setIsImgQuiz] = useState(false);
 
   const handleAddQuestion = (e) => {
     setQuestion(e.target.value);
@@ -85,6 +86,24 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
     uploadPostToFirebase();
   };
 
+  const QuestionSection = () => {
+    return (
+      <>
+        <label htmlFor="question" className="add-quiz-label">
+          Enter Question
+        </label>
+        <input
+          id="question"
+          type="text"
+          value={question}
+          placeholder="enter the question here"
+          className="add-quiz-input"
+          onChange={handleAddQuestion}
+        />
+      </>
+    );
+  };
+
   return (
     <div className="add-quiz-container">
       <div className="form-container">
@@ -101,6 +120,21 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
                 className="add-quiz-input"
                 onChange={(e) => setQuizName(e.target.value)}
               />
+              <div className="add-img-section">
+                <label htmlFor="img-quiz" className="add-quiz-label-sm">
+                  Check here if you want to use upload images for your quiz
+                  answers.
+                </label>
+                <label className="add-quiz-label-sm">
+                  <input
+                    type="checkbox"
+                    id="img-quiz"
+                    name="img-quiz"
+                    onChange={() => setIsImgQuiz(!isImgQuiz)}
+                  />
+                  I want to upload images for my quiz answers.
+                </label>
+              </div>
             </form>
             <Button label="Add Quiz Name" onClick={handleQuizNameStatus} />
           </>
@@ -108,30 +142,32 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
 
         {has_quiz_name && (
           <>
-            <form action="" className="add-quiz-form">
-              <label htmlFor="question" className="add-quiz-label">
-                Enter Question
-              </label>
-              <input
-                id="question"
-                type="text"
-                value={question}
-                placeholder="enter the question here"
-                className="add-quiz-input"
-                onChange={handleAddQuestion}
-              />
-              <label htmlFor="question" className="add-quiz-label">
-                Enter Answer
-              </label>
-              <input
-                id="answer"
-                type="text"
-                value={answer}
-                placeholder="enter the answer here"
-                className="add-quiz-input"
-                onChange={handleAddQAnswer}
-              />
-            </form>
+            {!isImgQuiz ? (
+              <form action="" className="add-quiz-form">
+                <QuestionSection />
+                <label htmlFor="question" className="add-quiz-label">
+                  Enter Answer
+                </label>
+                <input
+                  id="answer"
+                  type="text"
+                  value={answer}
+                  placeholder="enter the answer here"
+                  className="add-quiz-input"
+                  onChange={handleAddQAnswer}
+                />
+              </form>
+            ) : (
+              <form action="" className="add-quiz-form">
+                <QuestionSection />
+                <input
+                  id="file-input"
+                  type="file"
+                  placeholder="Choose image file(s)"
+                  className="form-control file-selection-input"
+                />
+              </form>
+            )}
             <Button label="Add Question & Answer" onClick={handleAddQandA} />
             <Button
               btnType="submit"
