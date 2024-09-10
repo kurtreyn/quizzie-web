@@ -32,9 +32,6 @@ export default function QuizListandFormSection({
     setShowModal(false);
   };
 
-  console.log("quizTypeSelected", quizTypeSelected);
-  console.log("isImageQuiz", isImageQuiz);
-
   return (
     <div className="quiz-and-list-section">
       {mode === "new_user" ||
