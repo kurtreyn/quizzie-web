@@ -13,6 +13,7 @@ import {
   secondSetOfInstructions,
   thirdSetOfInstructions,
   groupsPresent,
+  selectQuizTypeInstructions,
 } from "../shared/quizInstructions";
 import { db } from "../firebase";
 import {
@@ -42,6 +43,8 @@ export default function Home() {
     view_results,
     new_quiz_added,
     edit_quiz,
+    isImageQuiz,
+    quizTypeSelected,
   } = useSelector((state) => state.controls);
   const { current_user } = useSelector((state) => state.user);
   const [mode, setMode] = useState("new_user");
@@ -118,8 +121,6 @@ export default function Home() {
     }
   }, [groupLength, quiz_reset, new_quiz_added]);
 
-  console.log("creating_quiz:", creating_quiz);
-
   return (
     <div className="home-container">
       <Menu handleCancelCreateQuiz={handleCancelCreateQuiz} />
@@ -136,6 +137,9 @@ export default function Home() {
             firstSetOfInstructions={firstSetOfInstructions}
             secondSetOfInstructions={secondSetOfInstructions}
             thirdSetOfInstructions={thirdSetOfInstructions}
+            selectQuizTypeInstructions={selectQuizTypeInstructions}
+            isImageQuiz={isImageQuiz}
+            quizTypeSelected={quizTypeSelected}
           />
         )}
         {!quizActive && (
@@ -151,6 +155,8 @@ export default function Home() {
             setShowModal={setShowModal}
             quizId={quizId}
             setQuizId={setQuizId}
+            isImageQuiz={isImageQuiz}
+            quizTypeSelected={quizTypeSelected}
           />
         )}
       </div>

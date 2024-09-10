@@ -26,10 +26,10 @@ export const thirdSetOfInstructions = () => {
     <div className="instructions-wrapper">
       <p className="instructions-text">
         Solid name! Now lets add some questions and answers. When you're
-        finished, just click the{' '}
+        finished, just click the{" "}
         <strong className="click-reference">Submit Quiz</strong> button.
         <br />
-        Or, if you need to start over click the{' '}
+        Or, if you need to start over click the{" "}
         <strong className="click-reference">Reset Button</strong>
       </p>
     </div>
@@ -43,8 +43,18 @@ export const groupsPresent = () => {
         Looks like you have some quizes already. If you want to review one of
         your existing quizes, just click on the Quiz you would like to take.
         <br />
-        Or, if you want to add another Quiz, click the{' '}
+        Or, if you want to add another Quiz, click the{" "}
         <strong className="click-reference">Create Quiz</strong> button.
+      </p>
+    </div>
+  );
+};
+
+export const selectQuizTypeInstructions = () => {
+  return (
+    <div className="instructions-wrapper">
+      <p className="instructions-text">
+        Select which type of quiz you would like to create.
       </p>
     </div>
   );

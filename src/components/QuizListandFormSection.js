@@ -1,6 +1,10 @@
 import React from "react";
+import { setQuizType, setIsImageQuiz } from "../redux/controls";
+import { useDispatch } from "react-redux";
 import GroupContainer from "./GroupContainer";
 import AddQuizForm from "./AddQuizForm";
+import AddImageQuizForm from "./AddImageQuizForm";
+import QuizTypeForm from "./QuizTypeForm";
 import Modal from "./Modal";
 
 export default function QuizListandFormSection({
@@ -14,7 +18,10 @@ export default function QuizListandFormSection({
   showModal,
   setShowModal,
   setQuizId,
+  isImageQuiz,
+  quizTypeSelected,
 }) {
+  const dispatch = useDispatch();
   const handleSetQuizId = (id) => {
     setQuizId(id);
     setShowModal(true);
@@ -25,15 +32,21 @@ export default function QuizListandFormSection({
     setShowModal(false);
   };
 
+  console.log("quizTypeSelected", quizTypeSelected);
+  console.log("isImageQuiz", isImageQuiz);
+
   return (
     <div className="quiz-and-list-section">
       {mode === "new_user" ||
-        (mode === "returning_user" && creating_quiz && (
-          <AddQuizForm
-            runFetchQuizes={runFetchQuizes}
-            handleCancelCreateQuiz={handleCancelCreateQuiz}
-          />
-        ))}
+        (mode === "returning_user" &&
+          creating_quiz &&
+          (!quizTypeSelected ? (
+            <QuizTypeForm />
+          ) : isImageQuiz ? (
+            <AddImageQuizForm handleCancelCreateQuiz={handleCancelCreateQuiz} />
+          ) : (
+            <AddQuizForm handleCancelCreateQuiz={handleCancelCreateQuiz} />
+          )))}
 
       {mode === "returning_user" && groups && !creating_quiz && (
         <div className="group-wrapper">
