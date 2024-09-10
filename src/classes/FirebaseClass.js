@@ -102,9 +102,6 @@ export default class FirebaseClass {
   async uploadSingleImage(givenImage, postId, current_user) {
     const extension = ".png";
     const downloadURLs = [];
-    console.log("givenImage", givenImage);
-    console.log("current_user", current_user);
-
     const imageName = this.removeExtension(givenImage.name) + extension;
     const imgRef = ref(
       storage,
@@ -232,11 +229,23 @@ export default class FirebaseClass {
     return filename;
   }
 
-  async removeImageFromPost(postId, imgLinkInPostObj) {
+  async removeImageFromPost(imageId, imgLinkInPostObj, current_user) {
     const ac = new AlertClass();
-    const postRef = doc(db, "posts", postId);
+    const postRef = doc(db, "users", `${current_user.email}`, `posts`, imageId);
+
     if (imgLinkInPostObj) {
-      updateDoc(postRef, { images: arrayRemove(imgLinkInPostObj) })
+      // Ensure imgLinkInPostObj is not a nested array
+      if (Array.isArray(imgLinkInPostObj)) {
+        // Flatten the array if necessary
+        imgLinkInPostObj = imgLinkInPostObj.flat();
+      }
+
+      // Remove each image link individually
+      const promises = imgLinkInPostObj.map((imgLink) => {
+        return updateDoc(postRef, { images: arrayRemove(imgLink) });
+      });
+
+      Promise.all(promises)
         .then(() => {
           ac.successAlert("Images removed successfully");
         })
@@ -248,13 +257,17 @@ export default class FirebaseClass {
     }
   }
 
-  async deletePostImage(path, nameOfImgToDel, postId, imgLinkInPostObj) {
+  async deletePostImage(current_user, imageId, imageName, imgLinkInPostObj) {
     const ac = new AlertClass();
-    const postImgsRef = ref(storage, `postImages/${path}/${nameOfImgToDel}`);
-    deleteObject(postImgsRef)
+    const imgRef = ref(
+      storage,
+      `${current_user.email}/postImages/${imageId}/${imageName}`
+    );
+    console.log("imgRef", imgRef);
+    deleteObject(imgRef)
       .then(() => {
         if (imgLinkInPostObj) {
-          this.removeImageFromPost(postId, imgLinkInPostObj);
+          this.removeImageFromPost(imageId, imgLinkInPostObj, current_user);
         } else {
           console.error("imgLinkInPostObj is undefined");
         }
@@ -264,12 +277,21 @@ export default class FirebaseClass {
       });
   }
 
-  async deletePost(collection_ref, postId) {
+  async deletePost(
+    current_user,
+    imageId,
+    imageName,
+    postId,
+    imgLinkInPostObj,
+    postRef
+  ) {
     const ac = new AlertClass();
-    const postRef = doc(db, collection_ref, postId);
-    const storageRef = ref(storage, `postImages/${postId}/`);
+    const imgRef = ref(
+      storage,
+      `${current_user.email}/postImages/${imageId}/${imageName}`
+    );
     const imageNames = [];
-    await listAll(storageRef)
+    await listAll(imgRef)
       .then((res) => {
         res.items.forEach((itemRef) => {
           imageNames.push(itemRef.name);
@@ -279,7 +301,7 @@ export default class FirebaseClass {
         console.log("error", error);
       });
     imageNames.forEach((img) => {
-      this.deletePostImage(postId, img);
+      this.deletePostImage(current_user, imageId, imageName, imgLinkInPostObj);
     });
     await deleteDoc(postRef)
       .then(() => ac.successAlert("Post deleted successfully"))
