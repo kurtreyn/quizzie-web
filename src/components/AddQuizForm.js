@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setHasQuizName,
@@ -10,6 +10,8 @@ import {
 import { db } from "../firebase";
 import FirebaseClass from "../classes/FirebaseClass";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ToastContainer } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 import Button from "./Button";
 import "../styles/addQuizFormStyle.css";
 
@@ -41,28 +43,76 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
     dispatch(setNameOfQuizDispatch(quizName));
   };
 
-  const handleAddQandA = (e) => {
+  const handleAddQandA = async (e) => {
     e.preventDefault();
-    if (quizSet === null) {
-      setQuizSet([
-        {
-          question: question,
-          correct_answer: answer,
-          incorrect_answers: [],
-        },
-      ]);
+    if (!isImgQuiz) {
+      if (quizSet === null) {
+        setQuizSet([
+          {
+            question: question,
+            correct_answer: answer,
+            incorrect_answers: [],
+          },
+        ]);
+      } else {
+        setQuizSet((prevState) => {
+          return [
+            ...prevState,
+            {
+              question: question,
+              correct_answer: answer,
+              incorrect_answers: [],
+            },
+          ];
+        });
+      }
     } else {
-      setQuizSet((prevState) => {
-        return [
-          ...prevState,
-          { question: question, correct_answer: answer, incorrect_answers: [] },
-        ];
-      });
+      const answerId = uuidv4();
+      const imageRef = formRef.current["file-input"].files[0];
+      const downloadUrl = await fb.uploadSingleImage(
+        imageRef,
+        answerId,
+        current_user
+      );
+
+      console.log("question", question);
+      console.log("answerId", answerId);
+      console.log("imageRef", imageRef);
+      console.log("downloadUrl", downloadUrl);
+
+      if (quizSet === null) {
+        setQuizSet([
+          {
+            question: question,
+            correct_answer: answerId,
+            incorrect_answers: [],
+            image: downloadUrl,
+          },
+        ]);
+      } else {
+        setQuizSet((prevState) => {
+          return [
+            ...prevState,
+            {
+              question: question,
+              correct_answer: answerId,
+              incorrect_answers: [],
+              image: downloadUrl,
+            },
+          ];
+        });
+      }
     }
+
     setQuestion("");
     setAnswer("");
     setNumber(number + 1);
+    formRef.current.reset();
   };
+
+  useEffect(() => {
+    console.log("quizSet updated", quizSet);
+  }, [quizSet]);
 
   const handleReset = () => {
     dispatch(setHasQuizName(false));
@@ -91,8 +141,10 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
 
   const handleSubmitImageQuiz = (e) => {
     e.preventDefault();
-    const image = formRef.current["file-input"].files;
-    fb.addImageQuiz(current_user, name_of_quiz, quizSet, image);
+    fb.addImageQuiz(current_user, name_of_quiz, quizSet)
+      .then(dispatch(setCreatingQuiz(false)))
+      .then(dispatch(setNewQuizAdded(true)))
+      .then(dispatch(setButtonDisabled(false)));
   };
 
   return (
@@ -171,6 +223,9 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
                   className="add-quiz-input"
                   onChange={handleAddQuestion}
                 />
+                <label htmlFor="file-input" className="add-quiz-label">
+                  Add image file for the answer
+                </label>
                 <input
                   id="file-input"
                   type="file"
@@ -196,6 +251,18 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
           onClick={handleCancelCreateQuiz}
         />
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

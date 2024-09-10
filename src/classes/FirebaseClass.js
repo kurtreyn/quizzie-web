@@ -9,6 +9,7 @@ import {
   serverTimestamp,
   doc,
   setDoc,
+  addDoc,
   updateDoc,
   deleteDoc,
   onSnapshot,
@@ -98,12 +99,33 @@ export default class FirebaseClass {
     });
   }
 
-  async uploadImages(givenImages, postId) {
+  async uploadSingleImage(givenImage, postId, current_user) {
+    const extension = ".png";
+    const downloadURLs = [];
+    console.log("givenImage", givenImage);
+    console.log("current_user", current_user);
+
+    const imageName = this.removeExtension(givenImage.name) + extension;
+    const imgRef = ref(
+      storage,
+      `${current_user.email}/postImages/${postId}/${imageName}`
+    );
+    const uploadTask = await uploadBytes(imgRef, givenImage);
+    const downloadURL = await getDownloadURL(uploadTask.ref);
+    downloadURLs.push(downloadURL);
+
+    return downloadURLs;
+  }
+
+  async uploadImages(givenImages, postId, current_user) {
     const extension = ".png";
     const downloadURLs = [];
     for (let i = 0; i < givenImages.length; i++) {
       const imageName = this.removeExtension(givenImages[i].name) + extension;
-      const imgRef = ref(storage, `postImages/${postId}/${imageName}`);
+      const imgRef = ref(
+        storage,
+        `${current_user.email}/postImages/${postId}/${imageName}`
+      );
       const uploadTask = await uploadBytes(imgRef, givenImages[i]);
       const downloadURL = await getDownloadURL(uploadTask.ref);
       downloadURLs.push(downloadURL);
@@ -111,18 +133,22 @@ export default class FirebaseClass {
     return downloadURLs;
   }
 
-  async addImageQuiz(current_user, name_of_quiz, quizSet, givenImages) {
-    const postId = uuidv4();
-    const postRef = doc(db, "users", current_user.email, "posts", postId);
-    await setDoc(postRef, {
+  async addImageQuiz(current_user, name_of_quiz, quizSet) {
+    const ac = new AlertClass();
+    const postRef = collection(db, "users", `${current_user.email}`, `posts`);
+    addDoc(postRef, {
       owner_uid: current_user.uid,
       owner_email: current_user.email,
       subject_name: name_of_quiz,
       post_q_a: quizSet,
       createdAt: serverTimestamp(),
-    });
-    const downloadURLs = await this.uploadImages(givenImages, postId);
-    await updateDoc(postRef, { images: downloadURLs });
+    })
+      .then(() => {
+        ac.successAlert("Quiz added successfully");
+      })
+      .catch((error) => {
+        ac.errorAlert("Error adding quiz", error);
+      });
   }
 
   async updatePost(postId, newTitle, newTxtCont, newPrice) {
