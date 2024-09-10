@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setHasQuizName,
@@ -8,7 +8,10 @@ import {
   setButtonDisabled,
 } from "../redux/controls";
 import { db } from "../firebase";
+import FirebaseClass from "../classes/FirebaseClass";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ToastContainer } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 import Button from "./Button";
 import "../styles/addQuizFormStyle.css";
 
@@ -23,6 +26,8 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
   const [answer, setAnswer] = useState("");
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
+  const formRef = useRef(null);
+  const fb = new FirebaseClass();
 
   const handleAddQuestion = (e) => {
     setQuestion(e.target.value);
@@ -37,28 +42,53 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
     dispatch(setNameOfQuizDispatch(quizName));
   };
 
-  const handleAddQandA = (e) => {
+  const handleAddQandA = async (e) => {
     e.preventDefault();
+    const answerId = uuidv4();
+    const imageRef = formRef.current["file-input"].files[0];
+    const downloadUrl = await fb.uploadSingleImage(
+      imageRef,
+      answerId,
+      current_user
+    );
+
+    console.log("question", question);
+    console.log("answerId", answerId);
+    console.log("imageRef", imageRef);
+    console.log("downloadUrl", downloadUrl);
+
     if (quizSet === null) {
       setQuizSet([
         {
           question: question,
-          correct_answer: answer,
+          correct_answer: answerId,
           incorrect_answers: [],
+          image: downloadUrl,
         },
       ]);
     } else {
       setQuizSet((prevState) => {
         return [
           ...prevState,
-          { question: question, correct_answer: answer, incorrect_answers: [] },
+          {
+            question: question,
+            correct_answer: answerId,
+            incorrect_answers: [],
+            image: downloadUrl,
+          },
         ];
       });
     }
+
     setQuestion("");
     setAnswer("");
     setNumber(number + 1);
+    formRef.current.reset();
   };
+
+  useEffect(() => {
+    console.log("quizSet updated", quizSet);
+  }, [quizSet]);
 
   const handleReset = () => {
     dispatch(setHasQuizName(false));
@@ -67,22 +97,12 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
     setNumber(0);
   };
 
-  const uploadPostToFirebase = async (posts) => {
-    const postRef = collection(db, "users", `${current_user.email}`, `posts`);
-    addDoc(postRef, {
-      owner_uid: current_user.uid,
-      owner_email: current_user.email,
-      subject_name: name_of_quiz,
-      post_q_a: quizSet,
-      createdAt: serverTimestamp(),
-    })
+  const handleSubmitImageQuiz = (e) => {
+    e.preventDefault();
+    fb.addImageQuiz(current_user, name_of_quiz, quizSet)
       .then(dispatch(setCreatingQuiz(false)))
       .then(dispatch(setNewQuizAdded(true)))
       .then(dispatch(setButtonDisabled(false)));
-  };
-
-  const handleSubmitQuiz = () => {
-    uploadPostToFirebase();
   };
 
   return (
@@ -108,7 +128,7 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
 
         {has_quiz_name && (
           <>
-            <form action="" className="add-quiz-form">
+            <form action="" className="add-quiz-form" ref={formRef}>
               <label htmlFor="question" className="add-quiz-label">
                 Enter Question
               </label>
@@ -120,23 +140,21 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
                 className="add-quiz-input"
                 onChange={handleAddQuestion}
               />
-              <label htmlFor="question" className="add-quiz-label">
-                Enter Answer
+              <label htmlFor="file-input" className="add-quiz-label">
+                Add image file for the answer
               </label>
               <input
-                id="answer"
-                type="text"
-                value={answer}
-                placeholder="enter the answer here"
-                className="add-quiz-input"
-                onChange={handleAddQAnswer}
+                id="file-input"
+                type="file"
+                placeholder="Choose image file(s)"
+                className="form-control file-selection-input"
               />
             </form>
             <Button label="Add Question & Answer" onClick={handleAddQandA} />
             <Button
               btnType="submit"
               label="Submit Quiz"
-              onClick={handleSubmitQuiz}
+              onClick={(e) => handleSubmitImageQuiz(e)}
             />
             <Button btnType="reset" label="Reset" onClick={handleReset} />
           </>
@@ -147,6 +165,18 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
           onClick={handleCancelCreateQuiz}
         />
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

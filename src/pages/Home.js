@@ -29,6 +29,7 @@ import Quiz from "../components/Quiz";
 import Results from "../components/Results";
 import ControlsSection from "../components/ControlsSection";
 import QuizListandFormSection from "../components/QuizListandFormSection";
+import FirebaseClass from "../classes/FirebaseClass";
 import "../styles/homeStyle.css";
 
 export default function Home() {
@@ -51,6 +52,7 @@ export default function Home() {
   const [quizActive, setQuizActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [quizId, setQuizId] = useState(null);
+  const fb = new FirebaseClass();
   let groupLength;
   if (groups) {
     groupLength = groups.length;
@@ -95,14 +97,46 @@ export default function Home() {
       });
   };
 
+  // const deleteQuiz = async (postId) => {
+  //   const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
+  //   await deleteDoc(docRef)
+  //     .then(alert("Quiz has been deleted"))
+  //     .then(runFetchQuizzes())
+  //     .catch((error) => {
+  //       alert(error);
+  //     });
+  // };
+
   const deleteQuiz = async (postId) => {
+    let includesImage = false;
     const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
-    await deleteDoc(docRef)
-      .then(alert("Quiz has been deleted"))
-      .then(runFetchQuizzes())
-      .catch((error) => {
-        alert(error);
-      });
+    const post = groups.filter((group) => group.id === postId);
+    if (post[0].post_q_a[0].image) {
+      includesImage = true;
+    }
+    if (includesImage) {
+      const postQA = post[0].post_q_a;
+
+      for (let i = 0; i < postQA.length; i++) {
+        const imageLink = postQA[i].image;
+        const imageId = postQA[i].correct_answer;
+        const imageName = await fb.getImageNameFromUrl(imageLink);
+        await fb.deletePostImage(current_user, imageId, imageName, imageLink);
+      }
+      await deleteDoc(docRef)
+        .then(alert("Quiz has been deleted"))
+        .then(runFetchQuizzes())
+        .catch((error) => {
+          alert(error);
+        });
+    } else {
+      await deleteDoc(docRef)
+        .then(alert("Quiz has been deleted"))
+        .then(runFetchQuizzes())
+        .catch((error) => {
+          alert(error);
+        });
+    }
   };
 
   const handleDeleteQuiz = () => {
