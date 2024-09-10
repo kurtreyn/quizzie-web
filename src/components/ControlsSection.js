@@ -13,8 +13,10 @@ export default function ControlsSection({
   secondSetOfInstructions,
   thirdSetOfInstructions,
   selectQuizTypeInstructions,
+  imageQuizSetupInstructions,
   has_quiz_name,
   quizTypeSelected,
+  isImageQuiz,
 }) {
   return (
     <div className="controls-section">
@@ -37,6 +39,8 @@ export default function ControlsSection({
               <>
                 {!has_quiz_name ? (
                   <Instructions insturctions={secondSetOfInstructions} />
+                ) : isImageQuiz ? (
+                  <Instructions insturctions={imageQuizSetupInstructions} />
                 ) : (
                   <Instructions insturctions={thirdSetOfInstructions} />
                 )}

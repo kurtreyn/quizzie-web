@@ -14,6 +14,7 @@ import {
   thirdSetOfInstructions,
   groupsPresent,
   selectQuizTypeInstructions,
+  imageQuizSetupInstructions,
 } from "../shared/quizInstructions";
 import { db } from "../firebase";
 import {
@@ -172,6 +173,7 @@ export default function Home() {
             secondSetOfInstructions={secondSetOfInstructions}
             thirdSetOfInstructions={thirdSetOfInstructions}
             selectQuizTypeInstructions={selectQuizTypeInstructions}
+            imageQuizSetupInstructions={imageQuizSetupInstructions}
             isImageQuiz={isImageQuiz}
             quizTypeSelected={quizTypeSelected}
           />
