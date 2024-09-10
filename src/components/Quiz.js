@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   setPointsPossible,
   setFinalResults,
   setFinalScore,
   setViewResults,
-} from '../redux/controls';
-import Button from './Button';
-import '../styles/quizStyle.css';
+} from "../redux/controls";
+import Button from "./Button";
+import "../styles/quizStyle.css";
 
 export default function Quiz({ subjectName, group }) {
   const dispatch = useDispatch();
@@ -16,11 +16,17 @@ export default function Quiz({ subjectName, group }) {
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [results, setResults] = useState([]);
-  const [rightAnswer, setRightAnswer] = useState('');
-  const [currentQuestion, setCurrentQuestion] = useState('');
+  const [rightAnswer, setRightAnswer] = useState("");
+  const [currentQuestion, setCurrentQuestion] = useState("");
   const [longAnswerMode, setLongAnswerMode] = useState(false);
+  const [isImgQuiz, setIsImgQuiz] = useState(false);
+  const [correctImg, setCorrectImg] = useState(null);
+  const [imgArr, setImgArr] = useState([]);
   const { post_q_a } = group;
   let answers = post_q_a.map((answer) => answer.correct_answer);
+  let imgQuizAnswers = post_q_a.map((answer) => {
+    return { answer: answer.correct_answer, image: answer.image[0] };
+  });
   let pointsPossible = answers.length;
   let longestAnswer = 0;
 
@@ -47,18 +53,46 @@ export default function Quiz({ subjectName, group }) {
     let { correct_answer } = currentObj;
     let { question } = currentObj;
     let wrongAnswers = [...answers];
+    let wrongImageAnswers = [...imgQuizAnswers];
     let answerOptions = [];
     let idx = wrongAnswers.indexOf(correct_answer);
+    // console.log("currentObj", currentObj);
 
-    if (idx > -1) {
-      wrongAnswers.splice(idx, 1);
+    if (isImgQuiz) {
+      imgQuizAnswers.forEach((item) => {
+        if (item !== correct_answer) {
+          wrongAnswers.push(item);
+        }
+      });
     }
-    shuffle(wrongAnswers);
+    console.log("wrongImageAnswers", wrongImageAnswers);
 
-    for (let i = 0; i < limit; i++) {
-      answerOptions.push(wrongAnswers[i]);
+    if (isImgQuiz) {
+      // TODO: Implement image quiz
+    } else {
+      if (idx > -1) {
+        wrongAnswers.splice(idx, 1);
+      }
+      shuffle(wrongAnswers);
+
+      for (let i = 0; i < limit; i++) {
+        answerOptions.push(wrongAnswers[i]);
+      }
     }
     answerOptions.push(correct_answer);
+    // console.log("isImgQuiz", isImgQuiz);
+    if (isImgQuiz) {
+      let tempArr = [];
+      for (let i = 0; i < post_q_a.length; i++) {
+        const item = post_q_a[i];
+        const itemObj = {
+          correct_answer: item.correct_answer,
+          correct_image: item.image[0],
+        };
+        tempArr.push(itemObj);
+      }
+      setImgArr(tempArr);
+    }
 
     let qSet = {
       question: question,
@@ -119,10 +153,20 @@ export default function Quiz({ subjectName, group }) {
     if (longestAnswer > 100) {
       setLongAnswerMode(true);
     }
+    if (post_q_a[0].image[0]) {
+      // console.log("post_q_a", post_q_a);
+      // console.log("options", options);
+      // console.log("rightAnswer", rightAnswer);
+      setIsImgQuiz(true);
+    }
   }, [disabled, longestAnswer]);
 
-  console.log('longestAnswer', longestAnswer);
-  console.log('longAnswerMode', longAnswerMode);
+  // console.log('longestAnswer', longestAnswer);
+  // console.log('longAnswerMode', longAnswerMode);
+  // console.log("isImgQuiz", isImgQuiz);
+  // console.log("group ", group);
+  // console.log("imgArr", imgArr);
+  console.log("imgQuizAnswers", imgQuizAnswers);
 
   return (
     <div className="quiz-container">
@@ -138,48 +182,91 @@ export default function Quiz({ subjectName, group }) {
         </div>
 
         <div className="answer-section">
-          {options.map((option) => {
-            return (
-              <>
-                {option.answerOptions[0] && (
-                  <Button
-                    key={'00'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
-                    label={option.answerOptions[0]}
-                    onClick={() => handleAnswer(option.answerOptions[0])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[1] && (
-                  <Button
-                    key={'01'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
-                    label={option.answerOptions[1]}
-                    onClick={() => handleAnswer(option.answerOptions[1])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[2] && (
-                  <Button
-                    key={'02'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
-                    label={option.answerOptions[2]}
-                    onClick={() => handleAnswer(option.answerOptions[2])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[3] && (
-                  <Button
-                    key={'03'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
-                    label={option.answerOptions[3]}
-                    onClick={() => handleAnswer(option.answerOptions[3])}
-                    disabled={disabled}
-                  />
-                )}
-              </>
-            );
-          })}
+          {!isImgQuiz
+            ? options.map((option) => {
+                return (
+                  <>
+                    {option.answerOptions[0] && (
+                      <Button
+                        key={"00"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[0]}
+                        onClick={() => handleAnswer(option.answerOptions[0])}
+                        disabled={disabled}
+                      />
+                    )}
+                    {option.answerOptions[1] && (
+                      <Button
+                        key={"01"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[1]}
+                        onClick={() => handleAnswer(option.answerOptions[1])}
+                        disabled={disabled}
+                      />
+                    )}
+                    {option.answerOptions[2] && (
+                      <Button
+                        key={"02"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[2]}
+                        onClick={() => handleAnswer(option.answerOptions[2])}
+                        disabled={disabled}
+                      />
+                    )}
+                    {option.answerOptions[3] && (
+                      <Button
+                        key={"03"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[3]}
+                        onClick={() => handleAnswer(option.answerOptions[3])}
+                        disabled={disabled}
+                      />
+                    )}
+                  </>
+                );
+              })
+            : options.map((option) => {
+                return (
+                  <>
+                    {option.answerOptions[0] && (
+                      <Button
+                        key={"00"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[0]}
+                        onClick={() => handleAnswer(option.answerOptions[0])}
+                        disabled={disabled}
+                      />
+                    )}
+                    {option.answerOptions[1] && (
+                      <Button
+                        key={"01"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[1]}
+                        onClick={() => handleAnswer(option.answerOptions[1])}
+                        disabled={disabled}
+                      />
+                    )}
+                    {option.answerOptions[2] && (
+                      <Button
+                        key={"02"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[2]}
+                        onClick={() => handleAnswer(option.answerOptions[2])}
+                        disabled={disabled}
+                      />
+                    )}
+                    {option.answerOptions[3] && (
+                      <Button
+                        key={"03"}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={option.answerOptions[3]}
+                        onClick={() => handleAnswer(option.answerOptions[3])}
+                        disabled={disabled}
+                      />
+                    )}
+                  </>
+                );
+              })}
 
           {!disabled && (
             <Button
