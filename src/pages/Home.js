@@ -164,10 +164,6 @@ export default function Home() {
     }
   }, [groupLength, quiz_reset, new_quiz_added]);
 
-  if (active_group) {
-    console.log("active_group", active_group);
-  }
-
   return (
     <div className="home-container">
       <Menu handleCancelCreateQuiz={handleCancelCreateQuiz} />
