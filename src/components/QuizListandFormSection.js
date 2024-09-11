@@ -1,5 +1,5 @@
 import React from "react";
-import { setQuizType, setIsImageQuiz } from "../redux/controls";
+// import { setQuizType, setIsImageQuiz } from "../redux/controls";
 import { useDispatch } from "react-redux";
 import GroupContainer from "./GroupContainer";
 import AddQuizForm from "./AddQuizForm";
@@ -13,7 +13,7 @@ export default function QuizListandFormSection({
   handleQuizStatus,
   handleCancelCreateQuiz,
   creating_quiz,
-  runFetchQuizes,
+  // runFetchQuizes,
   handleDeleteQuiz,
   showModal,
   setShowModal,
@@ -21,7 +21,7 @@ export default function QuizListandFormSection({
   isImageQuiz,
   quizTypeSelected,
 }) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const handleSetQuizId = (id) => {
     setQuizId(id);
     setShowModal(true);

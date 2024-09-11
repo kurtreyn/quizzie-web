@@ -22,7 +22,11 @@ export default function QuizTypeForm({}) {
 
   return (
     <div className="quiz-and-list-section">
-      <Button label="Quiz With Images For Answers" onClick={selectImageQuiz} />
+      <Button
+        btnType="imgQzBtn"
+        label="Quiz With Images For Answers"
+        onClick={selectImageQuiz}
+      />
       <Button
         label="Standard Quiz With Text For Answers"
         onClick={selectStandardQuiz}
