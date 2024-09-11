@@ -8,6 +8,7 @@ import {
   setQuizReset,
   setIsImageQuiz,
   setQuizTypeSelected,
+  setHasQuizName,
   // setEditQuiz,
 } from "../redux/controls";
 import {
@@ -70,11 +71,16 @@ export default function Home() {
   };
 
   const handleCancelCreateQuiz = () => {
+    reset();
+  };
+
+  const reset = () => {
     dispatch(setButtonDisabled(false));
     dispatch(setCreatingQuiz(false));
     dispatch(setQuizReset(true));
     dispatch(setIsImageQuiz(false));
     dispatch(setQuizTypeSelected(false));
+    dispatch(setHasQuizName(false));
   };
 
   const handleQuizStatus = (theId) => {
@@ -129,6 +135,7 @@ export default function Home() {
         .deletePost(postId, current_user, quizName)
         .then(() => {
           ac.successAlert("Quiz deleted successfully");
+          reset();
           runFetchQuizzes();
         })
         .catch((error) => {
