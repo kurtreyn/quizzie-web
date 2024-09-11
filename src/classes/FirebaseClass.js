@@ -141,6 +141,7 @@ export default class FirebaseClass {
         subject_name: name_of_quiz,
         post_q_a: quizSet,
         createdAt: serverTimestamp(),
+        isImageQz: true,
       });
       ac.successAlert("Quiz added successfully");
     } catch (error) {

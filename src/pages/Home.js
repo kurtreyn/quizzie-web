@@ -31,12 +31,14 @@ import {
 import { ToastContainer } from "react-toastify";
 import Menu from "../components/Menu";
 import Quiz from "../components/Quiz";
+import ImageQuiz from "../components/ImageQuiz";
 import Results from "../components/Results";
 import ControlsSection from "../components/ControlsSection";
 import QuizListandFormSection from "../components/QuizListandFormSection";
 import FirebaseClass from "../classes/FirebaseClass";
 import AlertClass from "../classes/AlertClass";
 import "../styles/homeStyle.css";
+import { act } from "react";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -124,7 +126,7 @@ export default function Home() {
 
   const deleteQuiz = async (postId) => {
     let includesImage = false;
-    const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
+    // const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
     const post = groups.filter((group) => group.id === postId);
     if (post[0].post_q_a[0].image) {
       includesImage = true;
@@ -161,6 +163,10 @@ export default function Home() {
       setMode("returning_user");
     }
   }, [groupLength, quiz_reset, new_quiz_added]);
+
+  if (active_group) {
+    console.log("active_group", active_group);
+  }
 
   return (
     <div className="home-container">
@@ -207,7 +213,13 @@ export default function Home() {
         <div className="quiz-section">
           {active_group &&
             active_group.map((group, index) => {
-              return (
+              return group.isImageQuiz ? (
+                <ImageQuiz
+                  key={index}
+                  group={group}
+                  subjectName={group.subject_name}
+                />
+              ) : (
                 <Quiz
                   group={group}
                   key={index}

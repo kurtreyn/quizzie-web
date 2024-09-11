@@ -1,6 +1,6 @@
 import React from "react";
 // import { setQuizType, setIsImageQuiz } from "../redux/controls";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import GroupContainer from "./GroupContainer";
 import AddQuizForm from "./AddQuizForm";
 import AddImageQuizForm from "./AddImageQuizForm";

@@ -62,7 +62,6 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
           correct_answer: answerId,
           incorrect_answers: [],
           image: downloadUrl,
-          isImgQz: true,
         },
       ]);
     } else {
@@ -74,7 +73,6 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
             correct_answer: answerId,
             incorrect_answers: [],
             image: downloadUrl,
-            isImgQz: true,
           },
         ];
       });
