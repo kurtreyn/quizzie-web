@@ -213,7 +213,7 @@ export default function Home() {
         <div className="quiz-section">
           {active_group &&
             active_group.map((group, index) => {
-              return group.isImageQuiz ? (
+              return group.isImageQz ? (
                 <ImageQuiz
                   key={index}
                   group={group}
