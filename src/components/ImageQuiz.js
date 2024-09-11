@@ -53,7 +53,7 @@ export default function ImageQuiz({ subjectName, group }) {
     let { question } = currentObj;
     let wrongAnswers = [...answers];
     let answerOptions = [];
-    let idx = wrongAnswers
+    let [idx] = wrongAnswers
       .map((answer) => {
         const answerOption = answer.answer;
         if (answerOption === correct_answer) {
