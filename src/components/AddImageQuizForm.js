@@ -7,9 +7,7 @@ import {
   setNewQuizAdded,
   setButtonDisabled,
 } from "../redux/controls";
-import { db } from "../firebase";
 import FirebaseClass from "../classes/FirebaseClass";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ToastContainer } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import Button from "./Button";
@@ -23,7 +21,6 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
   const { current_user } = useSelector((state) => state.user);
   const [quizName, setQuizName] = useState(null);
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
   const formRef = useRef(null);
@@ -31,10 +28,6 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
 
   const handleAddQuestion = (e) => {
     setQuestion(e.target.value);
-  };
-
-  const handleAddQAnswer = (e) => {
-    setAnswer(e.target.value);
   };
 
   const handleQuizNameStatus = () => {
@@ -81,7 +74,6 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
     }
 
     setQuestion("");
-    setAnswer("");
     setNumber(number + 1);
     formRef.current.reset();
   };

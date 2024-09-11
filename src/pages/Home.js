@@ -6,7 +6,9 @@ import {
   setGroups,
   setActiveGroup,
   setQuizReset,
-  setEditQuiz,
+  setIsImageQuiz,
+  setQuizTypeSelected,
+  // setEditQuiz,
 } from "../redux/controls";
 import {
   firstSetOfInstructions,
@@ -31,6 +33,7 @@ import Results from "../components/Results";
 import ControlsSection from "../components/ControlsSection";
 import QuizListandFormSection from "../components/QuizListandFormSection";
 import FirebaseClass from "../classes/FirebaseClass";
+import AlertClass from "../classes/AlertClass";
 import "../styles/homeStyle.css";
 
 export default function Home() {
@@ -44,7 +47,7 @@ export default function Home() {
     quiz_reset,
     view_results,
     new_quiz_added,
-    edit_quiz,
+    // edit_quiz,
     isImageQuiz,
     quizTypeSelected,
   } = useSelector((state) => state.controls);
@@ -54,6 +57,7 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [quizId, setQuizId] = useState(null);
   const fb = new FirebaseClass();
+  const ac = new AlertClass();
   let groupLength;
   if (groups) {
     groupLength = groups.length;
@@ -67,6 +71,9 @@ export default function Home() {
   const handleCancelCreateQuiz = () => {
     dispatch(setButtonDisabled(false));
     dispatch(setCreatingQuiz(false));
+    dispatch(setQuizReset(true));
+    dispatch(setIsImageQuiz(false));
+    dispatch(setQuizTypeSelected(false));
   };
 
   const handleQuizStatus = (theId) => {
@@ -98,15 +105,15 @@ export default function Home() {
       });
   };
 
-  // const deleteQuiz = async (postId) => {
-  //   const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
-  //   await deleteDoc(docRef)
-  //     .then(alert("Quiz has been deleted"))
-  //     .then(runFetchQuizzes())
-  //     .catch((error) => {
-  //       alert(error);
-  //     });
-  // };
+  const deleteQuizPost = async (docRef) => {
+    // const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
+    await deleteDoc(docRef)
+      .then(ac.successAlert("Quiz deleted successfully"))
+      .then(runFetchQuizzes())
+      .catch((error) => {
+        alert(error);
+      });
+  };
 
   const deleteQuiz = async (postId) => {
     let includesImage = false;
@@ -124,19 +131,9 @@ export default function Home() {
         const imageName = await fb.getImageNameFromUrl(imageLink);
         await fb.deletePostImage(current_user, imageId, imageName, imageLink);
       }
-      await deleteDoc(docRef)
-        .then(alert("Quiz has been deleted"))
-        .then(runFetchQuizzes())
-        .catch((error) => {
-          alert(error);
-        });
+      await deleteQuizPost(docRef);
     } else {
-      await deleteDoc(docRef)
-        .then(alert("Quiz has been deleted"))
-        .then(runFetchQuizzes())
-        .catch((error) => {
-          alert(error);
-        });
+      await deleteQuizPost(docRef);
     }
   };
 
