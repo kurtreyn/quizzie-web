@@ -66,6 +66,10 @@ export default function ImageQuiz({ subjectName, group }) {
     console.log("idx", idx);
     console.log("correct_answer", correct_answer);
     console.log("question", question);
+
+    wrongAnswers.splice(idx, 1);
+    console.log("wrongAnswers", wrongAnswers);
+    shuffle(wrongAnswers);
     console.log("wrongAnswers", wrongAnswers);
 
     let qSet = {
