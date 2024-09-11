@@ -6,6 +6,8 @@ import {
   setCreatingQuiz,
   setNewQuizAdded,
   setButtonDisabled,
+  setIsImageQuiz,
+  setQuizTypeSelected,
 } from "../redux/controls";
 import FirebaseClass from "../classes/FirebaseClass";
 import { ToastContainer } from "react-toastify";
@@ -23,6 +25,7 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
   const [question, setQuestion] = useState("");
   const [number, setNumber] = useState(0);
   const [quizSet, setQuizSet] = useState([]);
+  const [loading, setLoading] = useState(false);
   const formRef = useRef(null);
   const fb = new FirebaseClass();
 
@@ -37,18 +40,20 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
 
   const handleAddQandA = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const answerId = uuidv4();
     const imageRef = formRef.current["file-input"].files[0];
     const downloadUrl = await fb.uploadSingleImage(
       imageRef,
-      answerId,
+      // answerId,
+      quizName,
       current_user
     );
 
-    console.log("question", question);
-    console.log("answerId", answerId);
-    console.log("imageRef", imageRef);
-    console.log("downloadUrl", downloadUrl);
+    // console.log("question", question);
+    // console.log("answerId", answerId);
+    // console.log("imageRef", imageRef);
+    // console.log("downloadUrl", downloadUrl);
 
     if (quizSet === null) {
       setQuizSet([
@@ -57,6 +62,7 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
           correct_answer: answerId,
           incorrect_answers: [],
           image: downloadUrl,
+          isImgQz: true,
         },
       ]);
     } else {
@@ -68,6 +74,7 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
             correct_answer: answerId,
             incorrect_answers: [],
             image: downloadUrl,
+            isImgQz: true,
           },
         ];
       });
@@ -76,6 +83,7 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
     setQuestion("");
     setNumber(number + 1);
     formRef.current.reset();
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -91,10 +99,15 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
 
   const handleSubmitImageQuiz = (e) => {
     e.preventDefault();
-    fb.addImageQuiz(current_user, name_of_quiz, quizSet)
+    setLoading(true);
+    const postId = uuidv4();
+    fb.addImageQuiz(current_user, name_of_quiz, quizSet, postId)
       .then(dispatch(setCreatingQuiz(false)))
       .then(dispatch(setNewQuizAdded(true)))
-      .then(dispatch(setButtonDisabled(false)));
+      .then(dispatch(setButtonDisabled(false)))
+      .then(dispatch(setIsImageQuiz(false)))
+      .then(dispatch(setQuizTypeSelected(false)))
+      .then(setLoading(false));
   };
 
   return (
@@ -114,7 +127,11 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
                 onChange={(e) => setQuizName(e.target.value)}
               />
             </form>
-            <Button label="Add Quiz Name" onClick={handleQuizNameStatus} />
+            <Button
+              label="Add Quiz Name"
+              onClick={handleQuizNameStatus}
+              disabled={loading}
+            />
           </>
         )}
 
@@ -142,24 +159,35 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
                 className="form-control file-selection-input"
               />
             </form>
-            <Button label="Add Question & Answer" onClick={handleAddQandA} />
+            <Button
+              label="Add Question & Upload Image Answer"
+              onClick={handleAddQandA}
+              disabled={loading || formRef.current === null}
+            />
             <Button
               btnType="submit"
               label="Submit Quiz"
+              disabled={loading}
               onClick={(e) => handleSubmitImageQuiz(e)}
             />
-            <Button btnType="reset" label="Reset" onClick={handleReset} />
+            <Button
+              btnType="reset"
+              label="Reset"
+              onClick={handleReset}
+              disabled={loading}
+            />
           </>
         )}
         <Button
           label="Cancel"
           btnType="cancel"
+          disabled={loading}
           onClick={handleCancelCreateQuiz}
         />
       </div>
       <ToastContainer
         position="top-center"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

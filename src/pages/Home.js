@@ -27,6 +27,7 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import { ToastContainer } from "react-toastify";
 import Menu from "../components/Menu";
 import Quiz from "../components/Quiz";
 import Results from "../components/Results";
@@ -105,8 +106,8 @@ export default function Home() {
       });
   };
 
-  const deleteQuizPost = async (docRef) => {
-    // const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
+  const deleteQuizPost = async (postId) => {
+    const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
     await deleteDoc(docRef)
       .then(ac.successAlert("Quiz deleted successfully"))
       .then(runFetchQuizzes())
@@ -123,17 +124,18 @@ export default function Home() {
       includesImage = true;
     }
     if (includesImage) {
-      const postQA = post[0].post_q_a;
-
-      for (let i = 0; i < postQA.length; i++) {
-        const imageLink = postQA[i].image;
-        const imageId = postQA[i].correct_answer;
-        const imageName = await fb.getImageNameFromUrl(imageLink);
-        await fb.deletePostImage(current_user, imageId, imageName, imageLink);
-      }
-      await deleteQuizPost(docRef);
+      const quizName = post[0].subject_name;
+      await fb
+        .deletePost(postId, current_user, quizName)
+        .then(() => {
+          ac.successAlert("Quiz deleted successfully");
+          runFetchQuizzes();
+        })
+        .catch((error) => {
+          ac.errorAlert("Error deleting quiz", error);
+        });
     } else {
-      await deleteQuizPost(docRef);
+      await deleteQuizPost(postId);
     }
   };
 
@@ -210,6 +212,18 @@ export default function Home() {
       )}
 
       {quizActive && view_results && <Results />}
+      <ToastContainer
+        position="top-center"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }
