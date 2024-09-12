@@ -136,46 +136,23 @@ export default function Quiz({ subjectName, group }) {
         </div>
 
         <div className="answer-section">
-          {options.map((option) => {
+          {options.map((option, optionIndex) => {
             return (
-              <>
-                {option.answerOptions[0] && (
-                  <Button
-                    key={"00"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[0]}
-                    onClick={() => handleAnswer(option.answerOptions[0])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[1] && (
-                  <Button
-                    key={"01"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[1]}
-                    onClick={() => handleAnswer(option.answerOptions[1])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[2] && (
-                  <Button
-                    key={"02"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[2]}
-                    onClick={() => handleAnswer(option.answerOptions[2])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[3] && (
-                  <Button
-                    key={"03"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[3]}
-                    onClick={() => handleAnswer(option.answerOptions[3])}
-                    disabled={disabled}
-                  />
-                )}
-              </>
+              <React.Fragment key={optionIndex}>
+                {option.answerOptions.map((answerOption, answerOptionIndex) => {
+                  return (
+                    answerOption && (
+                      <Button
+                        key={`${optionIndex}-${answerOptionIndex}`}
+                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
+                        label={answerOption}
+                        onClick={() => handleAnswer(answerOption)}
+                        disabled={disabled}
+                      />
+                    )
+                  );
+                })}
+              </React.Fragment>
             );
           })}
 
