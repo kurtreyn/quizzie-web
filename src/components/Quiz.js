@@ -175,3 +175,4 @@ export default function Quiz({ subjectName, group }) {
     </div>
   );
 }
+
