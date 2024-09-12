@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import {
   setPointsPossible,
   setFinalResults,
   setFinalScore,
   setViewResults,
-} from '../redux/controls';
-import Button from './Button';
-import '../styles/quizStyle.css';
+} from "../redux/controls";
+import Button from "./Button";
+import "../styles/quizStyle.css";
 
 export default function Quiz({ subjectName, group }) {
   const dispatch = useDispatch();
@@ -16,8 +16,8 @@ export default function Quiz({ subjectName, group }) {
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [results, setResults] = useState([]);
-  const [rightAnswer, setRightAnswer] = useState('');
-  const [currentQuestion, setCurrentQuestion] = useState('');
+  const [rightAnswer, setRightAnswer] = useState("");
+  const [currentQuestion, setCurrentQuestion] = useState("");
   const [longAnswerMode, setLongAnswerMode] = useState(false);
   const { post_q_a } = group;
   let answers = post_q_a.map((answer) => answer.correct_answer);
@@ -121,9 +121,6 @@ export default function Quiz({ subjectName, group }) {
     }
   }, [disabled, longestAnswer]);
 
-  console.log('longestAnswer', longestAnswer);
-  console.log('longAnswerMode', longAnswerMode);
-
   return (
     <div className="quiz-container">
       <div className="quiz-inner-container">
@@ -143,8 +140,8 @@ export default function Quiz({ subjectName, group }) {
               <>
                 {option.answerOptions[0] && (
                   <Button
-                    key={'00'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
+                    key={"00"}
+                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
                     label={option.answerOptions[0]}
                     onClick={() => handleAnswer(option.answerOptions[0])}
                     disabled={disabled}
@@ -152,8 +149,8 @@ export default function Quiz({ subjectName, group }) {
                 )}
                 {option.answerOptions[1] && (
                   <Button
-                    key={'01'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
+                    key={"01"}
+                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
                     label={option.answerOptions[1]}
                     onClick={() => handleAnswer(option.answerOptions[1])}
                     disabled={disabled}
@@ -161,8 +158,8 @@ export default function Quiz({ subjectName, group }) {
                 )}
                 {option.answerOptions[2] && (
                   <Button
-                    key={'02'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
+                    key={"02"}
+                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
                     label={option.answerOptions[2]}
                     onClick={() => handleAnswer(option.answerOptions[2])}
                     disabled={disabled}
@@ -170,8 +167,8 @@ export default function Quiz({ subjectName, group }) {
                 )}
                 {option.answerOptions[3] && (
                   <Button
-                    key={'03'}
-                    btnType={longAnswerMode ? 'longAnswerBtn' : 'answerBtn'}
+                    key={"03"}
+                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
                     label={option.answerOptions[3]}
                     onClick={() => handleAnswer(option.answerOptions[3])}
                     disabled={disabled}
