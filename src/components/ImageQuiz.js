@@ -9,7 +9,7 @@ import {
 import Button from "./Button";
 import "../styles/quizStyle.css";
 
-export default function Quiz({ subjectName, group }) {
+export default function ImageQuiz({ subjectName, group }) {
   const dispatch = useDispatch();
   const [options, setOptions] = useState([]);
   const [disabled, setDisabled] = useState(false);
@@ -18,9 +18,10 @@ export default function Quiz({ subjectName, group }) {
   const [results, setResults] = useState([]);
   const [rightAnswer, setRightAnswer] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState("");
-  const [longAnswerMode, setLongAnswerMode] = useState(false);
   const { post_q_a } = group;
-  let answers = post_q_a.map((answer) => answer.correct_answer);
+  let answers = post_q_a.map((answer) => {
+    return { answer: answer.correct_answer, image: answer.image[0] };
+  });
   let pointsPossible = answers.length;
   let longestAnswer = 0;
 
@@ -43,22 +44,11 @@ export default function Quiz({ subjectName, group }) {
       setDisabled(true);
       return;
     }
-    let limit = 3;
     let { correct_answer } = currentObj;
     let { question } = currentObj;
-    let wrongAnswers = [...answers];
-    let answerOptions = [];
-    let idx = wrongAnswers.indexOf(correct_answer);
+    let answerOptions = [...answers];
 
-    if (idx > -1) {
-      wrongAnswers.splice(idx, 1);
-    }
-    shuffle(wrongAnswers);
-
-    for (let i = 0; i < limit; i++) {
-      answerOptions.push(wrongAnswers[i]);
-    }
-    answerOptions.push(correct_answer);
+    shuffle(answerOptions);
 
     let qSet = {
       question: question,
@@ -74,6 +64,7 @@ export default function Quiz({ subjectName, group }) {
   const handleAnswer = (answer) => {
     if (answer === rightAnswer) {
       setScore(score + 1);
+    } else {
     }
 
     if (results.length === 0) {
@@ -116,11 +107,8 @@ export default function Quiz({ subjectName, group }) {
       dispatch(setFinalScore(score));
       dispatch(setPointsPossible(pointsPossible));
     }
-    if (longestAnswer > 100) {
-      setLongAnswerMode(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [disabled, longestAnswer]);
+    // eslint-disable-next-line
+  }, [disabled]);
 
   return (
     <div className="quiz-container">
@@ -135,26 +123,32 @@ export default function Quiz({ subjectName, group }) {
           })}
         </div>
 
-        <div className="answer-section">
-          {options.map((option, optionIndex) => {
-            return (
-              <React.Fragment key={optionIndex}>
-                {option.answerOptions.map((answerOption, answerOptionIndex) => {
-                  return (
-                    answerOption && (
-                      <Button
-                        key={`${optionIndex}-${answerOptionIndex}`}
-                        btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                        label={answerOption}
-                        onClick={() => handleAnswer(answerOption)}
-                        disabled={disabled}
-                      />
-                    )
-                  );
-                })}
-              </React.Fragment>
-            );
-          })}
+        <div className="img-answer-section">
+          <div className="img-answer-subsection">
+            {options &&
+              options.map((option, optionIndex) => {
+                return (
+                  option.answerOptions &&
+                  option.answerOptions.map(
+                    (answerOption, answerOptionIndex) => {
+                      return (
+                        <div
+                          className="img-wrapper"
+                          key={`${optionIndex}-${answerOptionIndex}`}
+                          onClick={() => handleAnswer(answerOption.answer)}>
+                          <img
+                            src={answerOption.image}
+                            alt="option"
+                            className="img-answer"
+                            id={answerOption.answer}
+                          />
+                        </div>
+                      );
+                    }
+                  )
+                );
+              })}
+          </div>
 
           {!disabled && (
             <Button
@@ -175,4 +169,3 @@ export default function Quiz({ subjectName, group }) {
     </div>
   );
 }
-

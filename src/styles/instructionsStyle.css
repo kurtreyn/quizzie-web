@@ -23,8 +23,18 @@
   margin-right: 3rem;
 }
 
+.instructions-text-li {
+  margin-left: 3rem;
+  margin-right: 3rem;
+  margin-bottom: 0.5rem;
+}
+
 .click-reference {
   color: blue;
+}
+
+.instruction-text-list {
+  list-style: none;
 }
 
 /* ---------- MOBILE SECTION ----------- */

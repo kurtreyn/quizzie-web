@@ -32,6 +32,9 @@ export default function Button({ label, disabled, onClick, btnType, type }) {
     if (btnType === "cancel") {
       setButtonClass("cancelBtn");
     }
+    if (btnType === "imgQzBtn") {
+      setButtonClass("imgQzBtn");
+    }
   }, [btnType]);
 
   return (

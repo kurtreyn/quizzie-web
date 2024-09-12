@@ -1,6 +1,6 @@
-import React from 'react';
-import Instructions from './Instructions';
-import Button from './Button';
+import React from "react";
+import Instructions from "./Instructions";
+import Button from "./Button";
 
 export default function ControlsSection({
   mode,
@@ -12,12 +12,16 @@ export default function ControlsSection({
   firstSetOfInstructions,
   secondSetOfInstructions,
   thirdSetOfInstructions,
+  selectQuizTypeInstructions,
+  imageQuizSetupInstructions,
   has_quiz_name,
+  quizTypeSelected,
+  isImageQuiz,
 }) {
   return (
     <div className="controls-section">
-      {mode === 'new_user' ||
-        (mode === 'returning_user' && !creating_quiz && groups.length === 0 && (
+      {mode === "new_user" ||
+        (mode === "returning_user" && !creating_quiz && groups.length === 0 && (
           <>
             <Instructions insturctions={firstSetOfInstructions} />
             <Button
@@ -28,25 +32,33 @@ export default function ControlsSection({
           </>
         ))}
 
-      {mode === 'new_user' ||
-        (mode === 'returning_user' && creating_quiz && (
+      {mode === "new_user" ||
+        (mode === "returning_user" && creating_quiz && (
           <>
-            {!has_quiz_name ? (
-              <Instructions insturctions={secondSetOfInstructions} />
+            {quizTypeSelected ? (
+              <>
+                {!has_quiz_name ? (
+                  <Instructions insturctions={secondSetOfInstructions} />
+                ) : isImageQuiz ? (
+                  <Instructions insturctions={imageQuizSetupInstructions} />
+                ) : (
+                  <Instructions insturctions={thirdSetOfInstructions} />
+                )}
+                {!creating_quiz && (
+                  <Button
+                    label="Create Quiz"
+                    disabled={button_disabled}
+                    onClick={handleCreateQuiz}
+                  />
+                )}
+              </>
             ) : (
-              <Instructions insturctions={thirdSetOfInstructions} />
-            )}
-            {!creating_quiz && (
-              <Button
-                label="Create Quiz"
-                disabled={button_disabled}
-                onClick={handleCreateQuiz}
-              />
+              <Instructions insturctions={selectQuizTypeInstructions} />
             )}
           </>
         ))}
 
-      {mode === 'returning_user' && groups.length > 0 && !creating_quiz && (
+      {mode === "returning_user" && groups.length > 0 && !creating_quiz && (
         <>
           <Instructions insturctions={groupsPresent} />
           <Button

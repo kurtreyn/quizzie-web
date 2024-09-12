@@ -1,7 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 export const controlsSlice = createSlice({
-  name: 'controls',
+  name: "controls",
   initialState: {
     button_disabled: false,
     creating_quiz: false,
@@ -16,6 +16,8 @@ export const controlsSlice = createSlice({
     view_results: false,
     new_quiz_added: false,
     edit_quiz: false,
+    isImageQuiz: false,
+    quizTypeSelected: false,
   },
   reducers: {
     setButtonDisabled: (state, action) => {
@@ -57,6 +59,12 @@ export const controlsSlice = createSlice({
     setEditQuiz: (state, action) => {
       state.edit_quiz = action.payload;
     },
+    setIsImageQuiz: (state, action) => {
+      state.isImageQuiz = action.payload;
+    },
+    setQuizTypeSelected: (state, action) => {
+      state.quizTypeSelected = action.payload;
+    },
   },
 });
 
@@ -74,6 +82,8 @@ export const {
   setViewResults,
   setNewQuizAdded,
   setEditQuiz,
+  setIsImageQuiz,
+  setQuizTypeSelected,
 } = controlsSlice.actions;
 
 export default controlsSlice.reducer;

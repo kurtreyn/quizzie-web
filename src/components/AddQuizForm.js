@@ -75,6 +75,7 @@ export default function AddQuizForm({ handleCancelCreateQuiz }) {
       subject_name: name_of_quiz,
       post_q_a: quizSet,
       createdAt: serverTimestamp(),
+      isImageQz: false,
     })
       .then(dispatch(setCreatingQuiz(false)))
       .then(dispatch(setNewQuizAdded(true)))
