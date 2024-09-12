@@ -144,4 +144,12 @@
     align-items: center;
     width: 100%;
   }
+
+  .img-answer-subsection {
+    flex-direction: column;
+  }
+
+  .img-answer:hover {
+    transform: scale(1.1);
+  }
 }

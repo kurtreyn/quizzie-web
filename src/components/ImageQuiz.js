@@ -63,10 +63,8 @@ export default function ImageQuiz({ subjectName, group }) {
 
   const handleAnswer = (answer) => {
     if (answer === rightAnswer) {
-      console.log("correct");
       setScore(score + 1);
     } else {
-      console.log("incorrect");
     }
 
     if (results.length === 0) {
