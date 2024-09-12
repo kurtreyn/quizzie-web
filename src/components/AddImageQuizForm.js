@@ -45,15 +45,9 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
     const imageRef = formRef.current["file-input"].files[0];
     const downloadUrl = await fb.uploadSingleImage(
       imageRef,
-      // answerId,
       quizName,
       current_user
     );
-
-    // console.log("question", question);
-    // console.log("answerId", answerId);
-    // console.log("imageRef", imageRef);
-    // console.log("downloadUrl", downloadUrl);
 
     if (quizSet === null) {
       setQuizSet([
