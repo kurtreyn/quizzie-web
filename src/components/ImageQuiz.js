@@ -40,7 +40,6 @@ export default function ImageQuiz({ subjectName, group }) {
   };
 
   const runQuiz = (currentObj) => {
-    console.log("running quiz");
     if (index === post_q_a.length) {
       setDisabled(true);
       return;
@@ -54,9 +53,8 @@ export default function ImageQuiz({ subjectName, group }) {
     let qSet = {
       question: question,
       correctAnswer: correct_answer,
-      answerOptions: answerOptions,
+      answerOptions: shuffle(answerOptions),
     };
-
     setCurrentQuestion(question);
     setRightAnswer(correct_answer);
     setOptions([qSet]);
@@ -111,11 +109,8 @@ export default function ImageQuiz({ subjectName, group }) {
       dispatch(setFinalScore(score));
       dispatch(setPointsPossible(pointsPossible));
     }
-    // console.log("rightAnswer", rightAnswer);
-    // console.log("options", options);
-    console.log("results", results);
-    console.log("index", index);
-  }, [disabled, options, results, index]);
+    // eslint-disable-next-line
+  }, [disabled]);
 
   return (
     <div className="quiz-container">

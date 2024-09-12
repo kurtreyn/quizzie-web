@@ -119,8 +119,8 @@ export default function Quiz({ subjectName, group }) {
     if (longestAnswer > 100) {
       setLongAnswerMode(true);
     }
-    console.log("index", index);
-  }, [disabled, longestAnswer, index]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disabled, longestAnswer]);
 
   return (
     <div className="quiz-container">
