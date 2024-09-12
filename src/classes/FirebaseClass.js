@@ -9,15 +9,15 @@ import {
   serverTimestamp,
   doc,
   setDoc,
-  addDoc,
+  // addDoc,
   updateDoc,
   deleteDoc,
   onSnapshot,
-  arrayRemove,
-  collection,
+  // arrayRemove,
+  // collection,
 } from "firebase/firestore";
 import { db, storage, postsRef } from "../firebase";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 import AlertClass from "./AlertClass";
 
 export default class FirebaseClass {
@@ -114,22 +114,6 @@ export default class FirebaseClass {
     return downloadURLs;
   }
 
-  // async uploadImages(givenImages, postId, current_user) {
-  //   const extension = ".png";
-  //   const downloadURLs = [];
-  //   for (let i = 0; i < givenImages.length; i++) {
-  //     const imageName = this.removeExtension(givenImages[i].name) + extension;
-  //     const imgRef = ref(
-  //       storage,
-  //       `${current_user.email}/postImages/${postId}/${imageName}`
-  //     );
-  //     const uploadTask = await uploadBytes(imgRef, givenImages[i]);
-  //     const downloadURL = await getDownloadURL(uploadTask.ref);
-  //     downloadURLs.push(downloadURL);
-  //   }
-  //   return downloadURLs;
-  // }
-
   async addImageQuiz(current_user, name_of_quiz, quizSet, postId) {
     const ac = new AlertClass();
     const postRef = doc(db, "users", `${current_user.email}`, "posts", postId);
@@ -165,32 +149,6 @@ export default class FirebaseClass {
         ac.errorAlert("Error updating post", error);
       });
   }
-
-  // async updateTextPost(
-  //   postId,
-  //   newTitle,
-  //   newTxtCont,
-  //   page,
-  //   pageParag,
-  //   txtOnly = true
-  // ) {
-  //   const ac = new AlertClass();
-  //   const postRef = doc(db, "posts", postId);
-
-  //   updateDoc(postRef, {
-  //     title: newTitle,
-  //     txt_cont: newTxtCont,
-  //     page: page,
-  //     page_parag: pageParag,
-  //     only_text: txtOnly,
-  //   })
-  //     .then(() => {
-  //       ac.successAlert("Updated successfully");
-  //     })
-  //     .catch((error) => {
-  //       ac.errorAlert("Error updating post", error);
-  //     });
-  // }
 
   async addNewPostImages(postId, currentImages, newImages) {
     const ac = new AlertClass();
