@@ -6,13 +6,18 @@ import {
   setGroups,
   setActiveGroup,
   setQuizReset,
-  setEditQuiz,
+  setIsImageQuiz,
+  setQuizTypeSelected,
+  setHasQuizName,
+  // setEditQuiz,
 } from "../redux/controls";
 import {
   firstSetOfInstructions,
   secondSetOfInstructions,
   thirdSetOfInstructions,
   groupsPresent,
+  selectQuizTypeInstructions,
+  imageQuizSetupInstructions,
 } from "../shared/quizInstructions";
 import { db } from "../firebase";
 import {
@@ -23,12 +28,17 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import { ToastContainer } from "react-toastify";
 import Menu from "../components/Menu";
 import Quiz from "../components/Quiz";
+import ImageQuiz from "../components/ImageQuiz";
 import Results from "../components/Results";
 import ControlsSection from "../components/ControlsSection";
 import QuizListandFormSection from "../components/QuizListandFormSection";
+import FirebaseClass from "../classes/FirebaseClass";
+import AlertClass from "../classes/AlertClass";
 import "../styles/homeStyle.css";
+import { act } from "react";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -41,13 +51,17 @@ export default function Home() {
     quiz_reset,
     view_results,
     new_quiz_added,
-    edit_quiz,
+    // edit_quiz,
+    isImageQuiz,
+    quizTypeSelected,
   } = useSelector((state) => state.controls);
   const { current_user } = useSelector((state) => state.user);
   const [mode, setMode] = useState("new_user");
   const [quizActive, setQuizActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [quizId, setQuizId] = useState(null);
+  const fb = new FirebaseClass();
+  const ac = new AlertClass();
   let groupLength;
   if (groups) {
     groupLength = groups.length;
@@ -59,8 +73,16 @@ export default function Home() {
   };
 
   const handleCancelCreateQuiz = () => {
+    reset();
+  };
+
+  const reset = () => {
     dispatch(setButtonDisabled(false));
     dispatch(setCreatingQuiz(false));
+    dispatch(setQuizReset(true));
+    dispatch(setIsImageQuiz(false));
+    dispatch(setQuizTypeSelected(false));
+    dispatch(setHasQuizName(false));
   };
 
   const handleQuizStatus = (theId) => {
@@ -92,14 +114,38 @@ export default function Home() {
       });
   };
 
-  const deleteQuiz = async (postId) => {
+  const deleteQuizPost = async (postId) => {
     const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
     await deleteDoc(docRef)
-      .then(alert("Quiz has been deleted"))
+      .then(ac.successAlert("Quiz deleted successfully"))
       .then(runFetchQuizzes())
       .catch((error) => {
         alert(error);
       });
+  };
+
+  const deleteQuiz = async (postId) => {
+    let includesImage = false;
+    // const docRef = doc(db, "users", `${current_user.email}`, `posts`, postId);
+    const post = groups.filter((group) => group.id === postId);
+    if (post[0].post_q_a[0].image) {
+      includesImage = true;
+    }
+    if (includesImage) {
+      const quizName = post[0].subject_name;
+      await fb
+        .deletePost(postId, current_user, quizName)
+        .then(() => {
+          ac.successAlert("Quiz deleted successfully");
+          reset();
+          runFetchQuizzes();
+        })
+        .catch((error) => {
+          ac.errorAlert("Error deleting quiz", error);
+        });
+    } else {
+      await deleteQuizPost(postId);
+    }
   };
 
   const handleDeleteQuiz = () => {
@@ -134,6 +180,10 @@ export default function Home() {
             firstSetOfInstructions={firstSetOfInstructions}
             secondSetOfInstructions={secondSetOfInstructions}
             thirdSetOfInstructions={thirdSetOfInstructions}
+            selectQuizTypeInstructions={selectQuizTypeInstructions}
+            imageQuizSetupInstructions={imageQuizSetupInstructions}
+            isImageQuiz={isImageQuiz}
+            quizTypeSelected={quizTypeSelected}
           />
         )}
         {!quizActive && (
@@ -149,6 +199,8 @@ export default function Home() {
             setShowModal={setShowModal}
             quizId={quizId}
             setQuizId={setQuizId}
+            isImageQuiz={isImageQuiz}
+            quizTypeSelected={quizTypeSelected}
           />
         )}
       </div>
@@ -157,7 +209,13 @@ export default function Home() {
         <div className="quiz-section">
           {active_group &&
             active_group.map((group, index) => {
-              return (
+              return group.isImageQz ? (
+                <ImageQuiz
+                  key={index}
+                  group={group}
+                  subjectName={group.subject_name}
+                />
+              ) : (
                 <Quiz
                   group={group}
                   key={index}
@@ -169,6 +227,18 @@ export default function Home() {
       )}
 
       {quizActive && view_results && <Results />}
+      <ToastContainer
+        position="top-center"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }
