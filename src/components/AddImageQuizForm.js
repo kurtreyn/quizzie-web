@@ -10,6 +10,7 @@ import {
   setQuizTypeSelected,
 } from "../redux/controls";
 import FirebaseClass from "../classes/FirebaseClass";
+import AlertClass from "../classes/AlertClass";
 import { ToastContainer } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import Button from "./Button";
@@ -28,6 +29,7 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
   const [loading, setLoading] = useState(false);
   const formRef = useRef(null);
   const fb = new FirebaseClass();
+  const ac = new AlertClass();
 
   const handleAddQuestion = (e) => {
     setQuestion(e.target.value);
@@ -38,44 +40,62 @@ export default function AddImageQuizForm({ handleCancelCreateQuiz }) {
     dispatch(setNameOfQuizDispatch(quizName));
   };
 
+  const checkForErrors = () => {
+    const imageRef = formRef.current["file-input"].files[0];
+    if (imageRef === undefined || imageRef === null) {
+      ac.errorAlert("Please select an image file");
+      return true;
+    }
+    if (question === "") {
+      ac.errorAlert("Please enter a question");
+      return true;
+    }
+  };
+
   const handleAddQandA = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    const answerId = uuidv4();
-    const imageRef = formRef.current["file-input"].files[0];
-    const downloadUrl = await fb.uploadSingleImage(
-      imageRef,
-      quizName,
-      current_user
-    );
+    const error = checkForErrors();
 
-    if (quizSet === null) {
-      setQuizSet([
-        {
-          question: question,
-          correct_answer: answerId,
-          incorrect_answers: [],
-          image: downloadUrl,
-        },
-      ]);
-    } else {
-      setQuizSet((prevState) => {
-        return [
-          ...prevState,
+    if (!error) {
+      setLoading(true);
+      const answerId = uuidv4();
+      const imageRef = formRef.current["file-input"].files[0];
+      const downloadUrl = await fb.uploadSingleImage(
+        imageRef,
+        quizName,
+        current_user
+      );
+
+      if (quizSet === null) {
+        setQuizSet([
           {
             question: question,
             correct_answer: answerId,
             incorrect_answers: [],
             image: downloadUrl,
           },
-        ];
-      });
-    }
+        ]);
+      } else {
+        setQuizSet((prevState) => {
+          return [
+            ...prevState,
+            {
+              question: question,
+              correct_answer: answerId,
+              incorrect_answers: [],
+              image: downloadUrl,
+            },
+          ];
+        });
+      }
 
-    setQuestion("");
-    setNumber(number + 1);
-    formRef.current.reset();
-    setLoading(false);
+      setQuestion("");
+      setNumber(number + 1);
+      formRef.current.reset();
+      setLoading(false);
+    } else {
+      return;
+    }
   };
 
   useEffect(() => {
