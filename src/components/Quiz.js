@@ -119,6 +119,7 @@ export default function Quiz({ subjectName, group }) {
     if (longestAnswer > 100) {
       setLongAnswerMode(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [disabled, longestAnswer]);
 
   return (
