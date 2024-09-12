@@ -18,9 +18,6 @@ export default function ImageQuiz({ subjectName, group }) {
   const [results, setResults] = useState([]);
   const [rightAnswer, setRightAnswer] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState("");
-  const [longAnswerMode, setLongAnswerMode] = useState(false);
-  const [correctImg, setCorrectImg] = useState(null);
-  const [imgArr, setImgArr] = useState([]);
   const { post_q_a } = group;
   let answers = post_q_a.map((answer) => {
     return { answer: answer.correct_answer, image: answer.image[0] };
@@ -63,14 +60,19 @@ export default function ImageQuiz({ subjectName, group }) {
         return -1; // Return -1 if the answer is not the correct answer
       })
       .filter((index) => index !== -1); // Filter out -1 values
-    console.log("idx", idx);
-    console.log("correct_answer", correct_answer);
-    console.log("question", question);
+    // console.log("idx", idx);
+    // console.log("correct_answer", correct_answer);
+    // console.log("question", question);
 
-    wrongAnswers.splice(idx, 1);
-    console.log("wrongAnswers", wrongAnswers);
+    const correctAnswerObj = wrongAnswers.splice(idx, 1);
+    // console.log("wrongAnswers", wrongAnswers);
+    console.log("correctAnswerObj", correctAnswerObj);
     shuffle(wrongAnswers);
-    console.log("wrongAnswers", wrongAnswers);
+
+    for (let i = 0; i < limit; i++) {
+      answerOptions.push(wrongAnswers[i]);
+    }
+    answerOptions.push(correct_answer);
 
     let qSet = {
       question: question,
@@ -132,11 +134,9 @@ export default function ImageQuiz({ subjectName, group }) {
       dispatch(setFinalScore(score));
       dispatch(setPointsPossible(pointsPossible));
     }
-    if (longestAnswer > 100) {
-      setLongAnswerMode(true);
-    }
     // console.log("rightAnswer", rightAnswer);
-  }, [disabled]);
+    console.log("options", options);
+  }, [disabled, options]);
 
   // console.log("group ", group);
   // console.log("imgArr", imgArr);
@@ -158,66 +158,30 @@ export default function ImageQuiz({ subjectName, group }) {
 
         <div className="img-answer-section">
           <div className="img-answer-subsection">
-            {answers &&
-              answers.map((answer) => {
+            {options &&
+              options.map((option, optionIndex) => {
                 return (
-                  <div
-                    className="img-wrapper"
-                    key={answer.answer}
-                    onClick={() => handleSetSelectedImage(answer.answer)}>
-                    <img
-                      src={answer.image}
-                      alt="answer"
-                      className="img-answer"
-                      id={answer.answer}
-                    />
-                  </div>
+                  option.answerOptions &&
+                  option.answerOptions.map(
+                    (answerOption, answerOptionIndex) => {
+                      return (
+                        <div
+                          className="img-wrapper"
+                          key={`${optionIndex}-${answerOptionIndex}`}
+                          onClick={() => handleAnswer(answerOption.answer)}>
+                          <img
+                            src={answerOption.image}
+                            alt="option"
+                            className="img-answer"
+                            id={answerOption.answer}
+                          />
+                        </div>
+                      );
+                    }
+                  )
                 );
               })}
           </div>
-
-          {/* {options.map((option) => {
-            return (
-              <>
-                {option.answerOptions[0] && (
-                  <Button
-                    key={"00"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[0]}
-                    onClick={() => handleAnswer(option.answerOptions[0])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[1] && (
-                  <Button
-                    key={"01"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[1]}
-                    onClick={() => handleAnswer(option.answerOptions[1])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[2] && (
-                  <Button
-                    key={"02"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[2]}
-                    onClick={() => handleAnswer(option.answerOptions[2])}
-                    disabled={disabled}
-                  />
-                )}
-                {option.answerOptions[3] && (
-                  <Button
-                    key={"03"}
-                    btnType={longAnswerMode ? "longAnswerBtn" : "answerBtn"}
-                    label={option.answerOptions[3]}
-                    onClick={() => handleAnswer(option.answerOptions[3])}
-                    disabled={disabled}
-                  />
-                )}
-              </>
-            );
-          })} */}
 
           {!disabled && (
             <Button
