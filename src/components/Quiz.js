@@ -119,7 +119,8 @@ export default function Quiz({ subjectName, group }) {
     if (longestAnswer > 100) {
       setLongAnswerMode(true);
     }
-  }, [disabled, longestAnswer]);
+    console.log("index", index);
+  }, [disabled, longestAnswer, index]);
 
   return (
     <div className="quiz-container">

@@ -45,40 +45,18 @@ export default function ImageQuiz({ subjectName, group }) {
       setDisabled(true);
       return;
     }
-    let limit = 3;
     let { correct_answer } = currentObj;
     let { question } = currentObj;
-    let wrongAnswers = [...answers];
-    let answerOptions = [];
-    let [idx] = wrongAnswers
-      .map((answer) => {
-        const answerOption = answer.answer;
-        if (answerOption === correct_answer) {
-          let index = wrongAnswers.indexOf(answer);
-          return index;
-        }
-        return -1; // Return -1 if the answer is not the correct answer
-      })
-      .filter((index) => index !== -1); // Filter out -1 values
-    // console.log("idx", idx);
-    // console.log("correct_answer", correct_answer);
-    // console.log("question", question);
+    let answerOptions = [...answers];
 
-    const correctAnswerObj = wrongAnswers.splice(idx, 1);
-    // console.log("wrongAnswers", wrongAnswers);
-    console.log("correctAnswerObj", correctAnswerObj);
-    shuffle(wrongAnswers);
-
-    for (let i = 0; i < limit; i++) {
-      answerOptions.push(wrongAnswers[i]);
-    }
-    answerOptions.push(correct_answer);
+    shuffle(answerOptions);
 
     let qSet = {
       question: question,
       correctAnswer: correct_answer,
-      answerOptions: shuffle(answerOptions),
+      answerOptions: answerOptions,
     };
+
     setCurrentQuestion(question);
     setRightAnswer(correct_answer);
     setOptions([qSet]);
@@ -87,7 +65,10 @@ export default function ImageQuiz({ subjectName, group }) {
 
   const handleAnswer = (answer) => {
     if (answer === rightAnswer) {
+      console.log("correct");
       setScore(score + 1);
+    } else {
+      console.log("incorrect");
     }
 
     if (results.length === 0) {
@@ -121,10 +102,6 @@ export default function ImageQuiz({ subjectName, group }) {
     dispatch(setViewResults(true));
   };
 
-  const handleSetSelectedImage = (answer) => {
-    console.log("answer", answer);
-  };
-
   useEffect(() => {
     if (!disabled) {
       runQuiz(post_q_a[index]);
@@ -135,13 +112,10 @@ export default function ImageQuiz({ subjectName, group }) {
       dispatch(setPointsPossible(pointsPossible));
     }
     // console.log("rightAnswer", rightAnswer);
-    console.log("options", options);
-  }, [disabled, options]);
-
-  // console.log("group ", group);
-  // console.log("imgArr", imgArr);
-  // console.log("answers", answers);
-  // console.log("options", options);
+    // console.log("options", options);
+    console.log("results", results);
+    console.log("index", index);
+  }, [disabled, options, results, index]);
 
   return (
     <div className="quiz-container">
