@@ -118,8 +118,6 @@ export default function Home() {
     }
   }, [groupLength, quiz_reset, new_quiz_added]);
 
-  console.log("creating_quiz:", creating_quiz);
-
   return (
     <div className="home-container">
       <Menu handleCancelCreateQuiz={handleCancelCreateQuiz} />
